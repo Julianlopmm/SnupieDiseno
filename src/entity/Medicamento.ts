@@ -19,6 +19,9 @@ export class Medicamento {
     @Column()
     precioUnitario: number;
 
+    @Column()
+    urlImagen: string;
+
     @OneToMany(() => Solicitud, (solicitud) => solicitud.medicamento)
     solicitudes: Solicitud[];
 }
