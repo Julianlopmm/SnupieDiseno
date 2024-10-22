@@ -1,0 +1,4 @@
+GRANT ALL PRIVILEGES ON snupie_db.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;
+
+CREATE DATABASE snupie_db;
