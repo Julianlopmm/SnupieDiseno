@@ -37,7 +37,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener usuario", error: error.message });
       }
     });
-
+*/
     app.post('/usuarios', async (req, res) => {
       try {
         const nuevoUsuario = await controladorUsuario.crearUsuario(req.body);
@@ -47,7 +47,7 @@ AppDataSource.initialize()
       }
     });
 
-*/
+
     // MEDICAMENTOS
 
 
@@ -92,7 +92,7 @@ AppDataSource.initialize()
     });
     
 
-    app.post('solicitudes', async (req, res) => {
+    app.post('/solicitud', async (req, res) => {
       try {
         const nuevaSolicitud = await controladorSolicitudes.crearSolicitud(req.body);
         res.json(nuevaSolicitud);
@@ -100,13 +100,22 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al crear solicitud", error: error.message });
       }
     })
-/*
-    app.put('/solicitudes/estado/:id', async (req, res) => {
+
+    app.put('/solicitud/aprobar/:id', async (req, res) => {
       try {
-        const solicitud = await controladorSolicitudes.cambiarEstadoSolicitud(req.params.id, req.body);
+        const solicitud = await controladorSolicitudes.aceptarSolicitud(parseInt(req.params.id));
         res.json(solicitud);
       } catch (error) {
-        res.status(500).json({ message: "Error al actualizar solicitud", error: error.message });
+        res.status(500).json({ message: "Error al aceptar solicitud", error: error.message });
+      }
+    });
+
+    app.put('/solicitud/rechazar/:id', async (req, res) => {
+      try {
+        const solicitud = await controladorSolicitudes.rechazarSolicitud(parseInt(req.params.id));
+        res.json(solicitud);
+      } catch (error) {
+        res.status(500).json({ message: "Error al rechazar solicitud", error: error.message });
       }
     });
 
@@ -118,7 +127,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
       }
     })
-*/
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {

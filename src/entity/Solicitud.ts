@@ -10,7 +10,7 @@ export class Solicitud {
     id: number;
 
     @Column()
-    numSolictud: string;
+    numSolicitud: string;
 
     @Column()
     fecha: Date;
