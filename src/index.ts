@@ -27,6 +27,8 @@ AppDataSource.initialize()
       }
     });
 
+
+    /*
     app.get('/usuarios/login', async (req, res) => {
       try {
         const usuario = await controladorUsuario.login(req.body);
@@ -45,14 +47,19 @@ AppDataSource.initialize()
       }
     });
 
-    app.put('/medicamentos/estado/:id', async (req, res) => {
+*/
+    // MEDICAMENTOS
+
+
+    app.post('/medicamentos', async (req, res) => {
       try {
-        const medicamento = await controladorMedicamentos.cambiarEstadoMedicamento(req.params.id, req.body);
-        res.json(medicamento);
+        const nuevoMedicamento = await controladorMedicamentos.crearMedicamento(req.body);
+        res.status(201).json(nuevoMedicamento); // 201 Created
       } catch (error) {
-        res.status(500).json({ message: "Error al actualizar medicamento", error: error.message });
+        res.status(500).json({ message: "Error al crear medicamento", error: error.message });
       }
     });
+    
 
     app.get('/medicamentos', async (req, res) => {
       try {
@@ -72,6 +79,19 @@ AppDataSource.initialize()
       }
     });
 
+    app.put('/medicamentos/:id', async (req, res) => {
+      try {
+        const medicamentoActualizado = await controladorMedicamentos.configurarMedicamento(
+          parseInt(req.params.id),
+          req.body
+        );
+        res.json(medicamentoActualizado);
+      } catch (error) {
+        res.status(500).json({ message: "Error al configurar medicamento", error: error.message });
+      }
+    });
+    
+
     app.post('solicitudes', async (req, res) => {
       try {
         const nuevaSolicitud = await controladorSolicitudes.crearSolicitud(req.body);
@@ -80,7 +100,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al crear solicitud", error: error.message });
       }
     })
-
+/*
     app.put('/solicitudes/estado/:id', async (req, res) => {
       try {
         const solicitud = await controladorSolicitudes.cambiarEstadoSolicitud(req.params.id, req.body);
@@ -98,7 +118,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
       }
     })
-
+*/
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {

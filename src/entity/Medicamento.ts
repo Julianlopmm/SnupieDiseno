@@ -24,13 +24,13 @@ export class Medicamento {
     puntosPorCompra: number;
 
     @Column()
-    puntosParaCanje : number;
+    puntosParaCanje: number;
 
     @Column()
     urlImagen: string;
 
-    @Column(() => Estado)
-    estadoPromocion : boolean;
+    @Column({ type: 'boolean' })
+    estadoPromocion: boolean;
 
     @OneToMany(() => Solicitud, (solicitud) => solicitud.medicamento)
     solicitudes: Solicitud[];
