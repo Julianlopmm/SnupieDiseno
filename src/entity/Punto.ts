@@ -13,7 +13,7 @@ export class Punto {
     @ManyToOne(() => Medicamento)
     medicamento: Medicamento;
 
-    @Column()
+    @ManyToOne (() => Usuario )
     usuario: Usuario;
 
 }
