@@ -14,7 +14,7 @@ export class ControladorMedicamentos {
     }
 
     async obtenerMedicamentos() {
-        this.medicamentos = await this.dataSource.manager.find(Medicamento);
+        this.medicamentos = await this.dataSource.manager.find(Medicamento, { relations: ["presentacion"] });
     }
 
     // Método para imprimir todos los medicamentos

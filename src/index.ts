@@ -27,6 +27,15 @@ AppDataSource.initialize()
       }
     });
 
+    app.get('/usuarios/login', async (req, res) => {
+      try {
+        const usuario = await controladorUsuario.login(req.body);
+        res.json(usuario);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener usuario", error: error.message });
+      }
+    });
+
     app.post('/usuarios', async (req, res) => {
       try {
         const nuevoUsuario = await controladorUsuario.crearUsuario(req.body);
@@ -35,6 +44,60 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al crear usuario", error: error.message });
       }
     });
+
+    app.put('/medicamentos/estado/:id', async (req, res) => {
+      try {
+        const medicamento = await controladorMedicamentos.cambiarEstadoMedicamento(req.params.id, req.body);
+        res.json(medicamento);
+      } catch (error) {
+        res.status(500).json({ message: "Error al actualizar medicamento", error: error.message });
+      }
+    });
+
+    app.get('/medicamentos', async (req, res) => {
+      try {
+        const medicamentos = await controladorMedicamentos.obtenerMedicamentos();
+        res.json(medicamentos);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener medicamentos", error: error.message });
+      }
+    });
+
+    app.get('/medicamentos/:id', async (req, res) => {
+      try {
+        const medicamento = await controladorMedicamentos.obtenerMedicamentoPorId(parseInt(req.params.id));
+        res.json(medicamento);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener medicamento", error: error.message });
+      }
+    });
+
+    app.post('solicitudes', async (req, res) => {
+      try {
+        const nuevaSolicitud = await controladorSolicitudes.crearSolicitud(req.body);
+        res.json(nuevaSolicitud);
+      } catch (error) {
+        res.status(500).json({ message: "Error al crear solicitud", error: error.message });
+      }
+    })
+
+    app.put('/solicitudes/estado/:id', async (req, res) => {
+      try {
+        const solicitud = await controladorSolicitudes.cambiarEstadoSolicitud(req.params.id, req.body);
+        res.json(solicitud);
+      } catch (error) {
+        res.status(500).json({ message: "Error al actualizar solicitud", error: error.message });
+      }
+    });
+
+    app.get('/solicitudes/pendientes', async (req, res) => {
+      try {
+        const solicitudes = await controladorSolicitudes.obtenerSolicitudesPendientes();
+        res.json(solicitudes);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
+      }
+    })
 
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;

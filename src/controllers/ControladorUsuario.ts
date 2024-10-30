@@ -6,10 +6,12 @@ interface UsuarioRequest {
     nombre: string;
     contrasena: string;
     rol: number;
+    email: string;
 }
 
 export class ControladorUsuario {
     private usuarios: Usuario[] = [];
+
     private roles: Rol[] = [];
     
     constructor(private dataSource = AppDataSource) {
@@ -17,15 +19,38 @@ export class ControladorUsuario {
     }
     
     async init() {
+        await this.crearRolesPredeterminados();
         await this.obtenerUsuarios();
         this.imprimirUsuarios();
     }
+
+    async crearRolesPredeterminados() {
+        const rolesPredeterminados = [
+            { nombre: "Admin" },
+            { nombre: "Operativo" },
+            { nombre: "Cliente" }
+        ];
+
+        for (const rolData of rolesPredeterminados) {
+            const rolExistente = await this.dataSource.manager.findOne(Rol, { where: { nombre: rolData.nombre } });
+            if (!rolExistente) {
+                const rol = new Rol();
+                rol.nombre = rolData.nombre;
+                await this.dataSource.manager.save(rol);
+                console.log(`Rol creado: ${rol.nombre}`);
+            } else {
+                console.log(`Rol ya existe: ${rolData.nombre}`);
+            }
+        }
+    }
+
     
 
     async obtenerUsuarios() {
-        this.usuarios = await this.dataSource.manager.find(Usuario);
+        this.usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
         return this.usuarios;
     }
+    
 
     async imprimirUsuarios() {
         if (this.usuarios.length === 0) {
@@ -46,13 +71,14 @@ export class ControladorUsuario {
     }
 
     async crearUsuario(req: UsuarioRequest) {
-        if (!req.nombre || !req.contrasena || !req.rol) {
+        if (!req.nombre || !req.contrasena || !req.rol || !req.email) {
             throw new Error("Invalid user data");
         }
     
         const usuario = new Usuario();
         usuario.nombre = req.nombre;
         usuario.contrasena = req.contrasena;
+        usuario.email = req.email;
         
         // Fetch the role entity based on ID
         const roleEntity = await this.dataSource.manager.findOne(Rol, { where: { id: req.rol } });
@@ -72,28 +98,4 @@ export class ControladorUsuario {
         }
     }
 
-    async actualizarUsuario(id: number, updatedUsuario: Usuario) {
-        const index = this.usuarios.findIndex(usuario => usuario.id === id);
-        if (index === -1) {
-            throw new Error('Usuario no encontrado');
-        }
-
-        const usuarioToUpdate = this.usuarios[index];
-        const mergedUsuario = this.dataSource.manager.merge(Usuario, usuarioToUpdate, updatedUsuario);
-        const savedUsuario = await this.dataSource.manager.save(mergedUsuario);
-
-        this.usuarios[index] = savedUsuario;
-        return savedUsuario;
-    }
-
-    async eliminarUsuario(id: number) {
-        const index = this.usuarios.findIndex(usuario => usuario.id === id);
-        if (index === -1) {
-            throw new Error('Usuario no encontrado');
-        }
-
-        await this.dataSource.manager.remove(this.usuarios[index]);
-        this.usuarios.splice(index, 1);
-        return true;
-    }
 }

@@ -61,15 +61,4 @@ export class ControladorSolicitudes {
         return savedSolicitud;
     }
 
-    // Método para eliminar una solicitud
-    async eliminarSolicitud(id: number) {
-        const index = this.solicitudes.findIndex(solicitud => solicitud.id === id);
-        if (index === -1) {
-            throw new Error('Solicitud no encontrada');
-        }
-
-        await this.dataSource.manager.remove(this.solicitudes[index]); // Elimina de la base de datos
-        this.solicitudes.splice(index, 1); // Elimina de la memoria
-        return true;
-    }
 }

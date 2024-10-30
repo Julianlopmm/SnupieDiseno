@@ -10,7 +10,13 @@ export class Farmacia {
     nombre: string;
 
     @Column()
-    ubicacion: string;
+    direccion: string;
+
+    @Column()
+    telefono: string;
+
+    @Column()
+    email: string;
 
 
 }

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Estado } from './Estado';
 import { Usuario } from './Usuario';
 import { Medicamento } from './Medicamento';
+import { Farmacia } from './Farmacia';
 
 @Entity()
 export class Solicitud {
@@ -9,17 +10,24 @@ export class Solicitud {
     id: number;
 
     @Column()
-    cantidad: number;
+    numSolictud: string;
 
     @Column()
     fecha: Date;
 
+    @ManyToOne(() => Medicamento, (medicamento) => medicamento.solicitudes)
+    medicamento: Medicamento;
+
+    @Column()
+    cantidad: number;
+
+    @ManyToOne(() => Farmacia)
+    farmacia: Farmacia;
+
     @ManyToOne(() => Estado)
-    estado: Estado;
+    estadoSolicitud: Estado;
 
     @ManyToOne(() => Usuario, (usuario) => usuario.solicitudes)
     usuario: Usuario;
 
-    @ManyToOne(() => Medicamento, (medicamento) => medicamento.solicitudes)
-    medicamento: Medicamento;
-}
+}    
