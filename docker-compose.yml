@@ -1,23 +1,23 @@
 version: '3'
 
 services:
-  # app:
-  #   build: .
-  #   environment:
-  #     DB_HOST: db
-  #     DB_PORT: 3306
-  #     DB_NAME: snupie_bd
-  #     DB_USER: myuser
-  #     DB_PASSWORD: secret
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - web
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - .:/usr/src/app
-  #   command: npm start
+  app:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: snupie_bd
+      DB_USER: myuser
+      DB_PASSWORD: secret
+    ports:
+      - 3000:3000
+    networks:
+      - web
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    command: npm start
 
   db:
     image: mysql:latest
