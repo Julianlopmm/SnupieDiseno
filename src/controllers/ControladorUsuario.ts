@@ -1,8 +1,16 @@
 import { Usuario } from "../entity/Usuario";
+import { Rol } from "../entity/Rol";
 import { AppDataSource } from "../data-source";
+
+interface UsuarioRequest {
+    nombre: string;
+    contrasena: string;
+    rol: number;
+}
 
 export class ControladorUsuario {
     private usuarios: Usuario[] = [];
+    private roles: Rol[] = [];
     
     constructor(private dataSource = AppDataSource) {
         this.init();
@@ -37,10 +45,31 @@ export class ControladorUsuario {
         return usuario;
     }
 
-    async crearUsuario(usuario: Usuario) {
-        const savedUsuario = await this.dataSource.manager.save(usuario);
-        this.usuarios.push(savedUsuario);
-        return savedUsuario;
+    async crearUsuario(req: UsuarioRequest) {
+        if (!req.nombre || !req.contrasena || !req.rol) {
+            throw new Error("Invalid user data");
+        }
+    
+        const usuario = new Usuario();
+        usuario.nombre = req.nombre;
+        usuario.contrasena = req.contrasena;
+        
+        // Fetch the role entity based on ID
+        const roleEntity = await this.dataSource.manager.findOne(Rol, { where: { id: req.rol } });
+        if (!roleEntity) {
+            throw new Error("Role not found");
+        }
+        
+        usuario.rol = roleEntity;
+    
+        try {
+            const savedUsuario = await this.dataSource.manager.save(usuario);
+            this.usuarios.push(savedUsuario);
+            return savedUsuario;
+        } catch (error) {
+            console.error("Error creating user:", error);
+            throw error;
+        }
     }
 
     async actualizarUsuario(id: number, updatedUsuario: Usuario) {

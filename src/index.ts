@@ -27,6 +27,15 @@ AppDataSource.initialize()
       }
     });
 
+    app.post('/usuarios', async (req, res) => {
+      try {
+        const nuevoUsuario = await controladorUsuario.crearUsuario(req.body);
+        res.json(nuevoUsuario);
+      } catch (error) {
+        res.status(500).json({ message: "Error al crear usuario", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
