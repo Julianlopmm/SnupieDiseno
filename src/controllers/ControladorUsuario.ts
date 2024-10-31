@@ -1,6 +1,7 @@
 import { Usuario } from "../entity/Usuario";
 import { Rol } from "../entity/Rol";
 import { AppDataSource } from "../data-source";
+import { ListaUsuariosSingleton } from "../ListaUsuariosSingleton";
 
 interface UsuarioRequest {
     nombre: string;
@@ -10,7 +11,7 @@ interface UsuarioRequest {
 }
 
 export class ControladorUsuario {
-    private usuarios: Usuario[] = [];
+    private listaUsuariosSingleton = ListaUsuariosSingleton.getInstance(); // Obtén la instancia única
 
     private roles: Rol[] = [];
     
@@ -47,23 +48,27 @@ export class ControladorUsuario {
     
 
     async obtenerUsuarios() {
-        this.usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
-        return this.usuarios;
+        const usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
+        this.listaUsuariosSingleton.setUsuarios(usuarios); // Usa la instancia global
+        return usuarios;
     }
     
 
     async imprimirUsuarios() {
-        if (this.usuarios.length === 0) {
+        const usuarios = this.listaUsuariosSingleton.getUsuarios(); // Usa la instancia global
+        if (usuarios.length === 0) {
             console.log('No hay usuarios');
         }
-        this.usuarios.forEach(usuario => {
+        usuarios.forEach(usuario => {
             console.log(usuario);
             console.log("\n");
         });
+
+        return usuarios;
     }
 
     async obtenerUsuarioPorId(id: number) {
-        let usuario = this.usuarios.find(usuario => usuario.id === id);
+        let usuario = this.listaUsuariosSingleton.getUsuarios().find(usuario => usuario.id === id);
         if (!usuario) {
             usuario = await this.dataSource.manager.findOne(Usuario, { where: { id } });
         }
@@ -74,23 +79,22 @@ export class ControladorUsuario {
         if (!req.nombre || !req.contrasena || !req.rol || !req.email) {
             throw new Error("Invalid user data");
         }
-    
+
         const usuario = new Usuario();
         usuario.nombre = req.nombre;
         usuario.contrasena = req.contrasena;
         usuario.email = req.email;
-        
-        // Fetch the role entity based on ID
+
         const roleEntity = await this.dataSource.manager.findOne(Rol, { where: { id: req.rol } });
         if (!roleEntity) {
             throw new Error("Role not found");
         }
-        
+
         usuario.rol = roleEntity;
-    
+
         try {
             const savedUsuario = await this.dataSource.manager.save(usuario);
-            this.usuarios.push(savedUsuario);
+            this.listaUsuariosSingleton.agregarUsuario(savedUsuario); // Usa la instancia global
             return savedUsuario;
         } catch (error) {
             console.error("Error creating user:", error);

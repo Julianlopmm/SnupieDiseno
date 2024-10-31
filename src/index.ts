@@ -2,6 +2,7 @@ import { AppDataSource } from "./data-source";
 import { ControladorMedicamentos } from "./controllers/ControladorMedicamentos";
 import { ControladorSolicitudes } from "./controllers/ControladorSolicitudes";
 import { ControladorUsuario } from "./controllers/ControladorUsuario";
+import { ListaUsuariosSingleton } from "./ListaUsuariosSingleton";
 import express from 'express';
 
 AppDataSource.initialize()
@@ -21,6 +22,15 @@ AppDataSource.initialize()
     app.get('/usuarios', async (req, res) => {
       try {
         const usuarios = await controladorUsuario.obtenerUsuarios();
+        res.json(usuarios);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener usuarios", error: error.message });
+      }
+    });
+
+    app.get('/imprimir', async (req, res) => {
+      try {
+        const usuarios = await controladorUsuario.imprimirUsuarios();
         res.json(usuarios);
       } catch (error) {
         res.status(500).json({ message: "Error al obtener usuarios", error: error.message });
