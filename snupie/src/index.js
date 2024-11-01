@@ -1,17 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client'; // Importación correcta para React 18
 import './index.css';
 import App from './App';
+import ReviewRequests from './ReviewRequests'; // Importa tu componente correctamente
+import './ReviewRequests.css';
 import reportWebVitals from './reportWebVitals';
 
+// Crear root y renderizar el componente
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ReviewRequests /> {/* Usa el componente exportado */}
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Si quieres medir el rendimiento, usa reportWebVitals
 reportWebVitals();
