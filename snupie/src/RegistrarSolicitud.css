@@ -1,0 +1,61 @@
+.register-container {
+    background-color: #d3d3d3; /* Fondo gris claro */
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: auto;
+    border: 2px solid #87cefa; /* Borde azul */
+  }
+  
+  .title {
+    font-size: 48px;
+    text-align: center;
+    color: #3e3b5b; /* Color morado oscuro */
+  }
+  
+  .subtitle {
+    text-align: center;
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  select, input[type="date"], input[type="text"], input[type="number"], input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .register-button {
+    display: block;
+    width: 150px;
+    padding: 10px;
+    margin: 20px auto 0;
+    background-color: #6a5acd; /* Morado */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .register-button:hover {
+    opacity: 0.9;
+  }
+  
