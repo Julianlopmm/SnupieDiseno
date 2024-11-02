@@ -1,36 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AsignarMedicamentos.css';
 import ConfigurarMedicamento from './ConfigurarMedicamento'; // Importa el nuevo componente
 
 function AsignarMedicamentos() {
   const [selectedMedication, setSelectedMedication] = useState(null);
+  const [medicamentos, setMedicamentos] = useState([]);
 
-  const medicamentos = [
-    {
-      nombre: 'Acetaminofén Pastilla',
-      precio: '$0',
-      descripcion: 'Body text.',
-      imagen: 'link-a-imagen-1',
-    },
-    {
-      nombre: 'Ibuprofeno Pastilla',
-      precio: '$0',
-      descripcion: 'Body text.',
-      imagen: 'link-a-imagen-2',
-    },
-    {
-      nombre: 'Enantyum Boli',
-      precio: '$0',
-      descripcion: 'Body text.',
-      imagen: 'link-a-imagen-3',
-    },
-    {
-      nombre: 'Enantyum Pastilla',
-      precio: '$0',
-      descripcion: 'Body text.',
-      imagen: 'link-a-imagen-4',
-    },
-  ];
+  // Hook para obtener los medicamentos al cargar el componente
+  useEffect(() => {
+    const fetchMedicamentos = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/medicamentos'); 
+        if (!response.ok) {
+          throw new Error('Error al obtener los medicamentos');
+        }
+        const data = await response.json();
+        setMedicamentos(data);
+      } catch (error) {
+        console.error('Error al obtener los medicamentos:', error);
+      }
+    };
+  
+    fetchMedicamentos();
+  }, []);
 
   const handleConfigureClick = (med) => {
     setSelectedMedication(med);
@@ -47,10 +39,10 @@ function AsignarMedicamentos() {
       <div className="medications-grid">
         {medicamentos.map((med, index) => (
           <div key={index} className="med-card">
-            <img src={med.imagen} alt={med.nombre} className="med-image" />
+            <img src={med.imagen || 'ruta-a-imagen-por-defecto'} alt={med.nombre} className="med-image" />
             <h3>{med.nombre}</h3>
-            <p>{med.precio}</p>
-            <p>{med.descripcion}</p>
+            <p>{med.precio ? `$${med.precio}` : 'Precio no disponible'}</p>
+            <p>{med.descripcion || 'Descripción no disponible'}</p>
             <button className="configure-button" onClick={() => handleConfigureClick(med)}>Configurar</button>
           </div>
         ))}
