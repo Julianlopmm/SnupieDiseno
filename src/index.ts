@@ -5,6 +5,7 @@ import { ControladorUsuario } from "./controllers/ControladorUsuario";
 import { ControladorFarmacias } from "./controllers/ControladorFarmacias";
 import { ListaSingleton } from "./ListaSingleton";
 import express from 'express';
+import cors from 'cors'; 
 
 AppDataSource.initialize()
   .then(async () => {
@@ -15,6 +16,7 @@ AppDataSource.initialize()
 
     const app = express();
     app.use(express.json());
+    app.use(cors()); // Usa cors para habilitar CORS para todas las rutas
 
     app.get('/', (req, res) => {
       res.send('¡Hola mundo!');
@@ -41,7 +43,7 @@ AppDataSource.initialize()
 
 
 
-    app.get('/usuarios/login', async (req, res) => {
+    app.post('/usuarios/login', async (req, res) => {
       try {
         const usuario = await controladorUsuario.login(req.body);
         res.json(usuario);
@@ -152,7 +154,7 @@ AppDataSource.initialize()
     });
 
     // Iniciar el servidor
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {0
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
     });

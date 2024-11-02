@@ -103,7 +103,7 @@ export class ControladorUsuario {
     }
 
     async login(req: { email: string, contrasena: string }) {
-        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { email: req.email, contrasena: req.contrasena } });
+        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { email: req.email, contrasena: req.contrasena }, relations: ["rol"] });
         if (!usuario) {
             throw new Error("User not found");
         }
