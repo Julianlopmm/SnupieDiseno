@@ -2,10 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client'; // Importación correcta para React 18
 import './index.css';
 import App from './App';
-import ReviewRequests from './ReviewRequests'; // Importa tu componente correctamente
 import './ReviewRequests.css';
 import reportWebVitals from './reportWebVitals';
-import AsignarMedicamentos from './AsignarMedicamentos';
 
 // Crear root y renderizar el componente
 const root = ReactDOM.createRoot(document.getElementById('root'));
