@@ -1,5 +1,11 @@
+body {
+  background-color: #d3d3d3; /* Fondo gris claro */
+  margin: 0;
+  padding: 0;
+}
+
 .register-container {
-    background-color: #d3d3d3; /* Fondo gris claro */
+    background-color: #d3d3d3; /*Fondo gris claro*/
     padding: 30px;
     border-radius: 12px;
     max-width: 900px;
