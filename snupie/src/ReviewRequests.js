@@ -27,7 +27,7 @@ function ReviewRequests() {
           producto: solicitud.medicamento.nombre,
           cantidad: solicitud.cantidad,
           presentacion: solicitud.medicamento.presentacion.nombre,
-          imagenFactura: solicitud.medicamento.urlImagen, // Asumiendo que la URL de la imagen está aquí
+          imagenFactura: solicitud.urlImagen, // Asumiendo que la URL de la imagen está aquí
         }));
         setSolicitudesArregladas(nuevasSolicitudesArregladas); // Guardar las solicitudes transformadas
         setFilteredSolicitudes(nuevasSolicitudesArregladas); // Inicializar solicitudes filtradas

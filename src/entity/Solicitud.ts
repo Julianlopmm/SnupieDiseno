@@ -30,4 +30,7 @@ export class Solicitud {
     @ManyToOne(() => Usuario, (usuario) => usuario.solicitudes)
     usuario: Usuario;
 
+    @Column()
+    urlImagen: string;
+
 }    

@@ -9,6 +9,7 @@ const RegistrarSolicitud = () => {
     const [cantidad, setCantidad] = useState('');
     const [farmacias, setFarmacias] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [url, setUrl] = useState('');
 
     // Obtener el ID del usuario desde localStorage
     const userId = localStorage.getItem('userId');
@@ -56,7 +57,7 @@ const RegistrarSolicitud = () => {
         try {
             const solicitudData = {
                 numSolicitud: numeroFactura,
-                fecha,
+                fecha: fecha,
                 medicamento: {
                     id: parseInt(producto, 10)
                 },
@@ -69,8 +70,10 @@ const RegistrarSolicitud = () => {
                 },
                 usuario: {
                     id: parseInt(userId, 10) // ID del usuario autenticado
-                }
+                },
+                urlImagen: url,
             };
+            
 
             const response = await fetch('http://localhost:5000/solicitud', {
                 method: 'POST',
@@ -95,50 +98,54 @@ const RegistrarSolicitud = () => {
     };
 
     return (
-      <div className="register-container">
-        <h1 className="title">Snupie</h1>
-        <h2 className="subtitle">Registrar Solicitud</h2>
+        <div className="register-container">
+            <h1 className="title">Snupie</h1>
+            <h2 className="subtitle">Registrar Solicitud</h2>
 
-        <div className="form-grid">
-          <div className="form-group">
-            <label>Farmacia</label>
-            <select value={farmacia} onChange={(e) => setFarmacia(e.target.value)}>
-              <option value="">Seleccione</option>
-              {farmacias.map((farmacia) => (
-                <option key={farmacia.id} value={farmacia.id}>{farmacia.nombre}</option>
-              ))}
-            </select>
-          </div>
+            <div className="form-grid">
+                <div className="form-group">
+                    <label>Farmacia</label>
+                    <select value={farmacia} onChange={(e) => setFarmacia(e.target.value)}>
+                        <option value="">Seleccione</option>
+                        {farmacias.map((farmacia) => (
+                            <option key={farmacia.id} value={farmacia.id}>{farmacia.nombre}</option>
+                        ))}
+                    </select>
+                </div>
 
-          <div className="form-group">
-            <label>Producto</label>
-            <select value={producto} onChange={(e) => setProducto(e.target.value)}>
-              <option value="">Seleccione</option>
-              {productos.map((producto) => (
-                <option key={producto.id} value={producto.id}>{producto.nombre}</option>
-              ))}
-            </select>
-          </div>
+                <div className="form-group">
+                    <label>Producto</label>
+                    <select value={producto} onChange={(e) => setProducto(e.target.value)}>
+                        <option value="">Seleccione</option>
+                        {productos.map((producto) => (
+                            <option key={producto.id} value={producto.id}>{producto.nombre}</option>
+                        ))}
+                    </select>
+                </div>
 
-          <div className="form-group">
-            <label>Fecha</label>
-            <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
-          </div>
+                <div className="form-group">
+                    <label>Cantidad</label>
+                    <input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
+                </div>
 
-          <div className="form-group datos">
-            <label>Número de Factura</label>
-            <input type="text" value={numeroFactura} onChange={(e) => setNumeroFactura(e.target.value)} />
+                <div className="form-group">
+                    <label>Fecha</label>
+                    <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
+                </div>
 
-            <label>Cantidad</label>
-            <input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
+                <div className="form-group">
+                    <label>Número de Factura</label>
+                    <input type="text" value={numeroFactura} onChange={(e) => setNumeroFactura(e.target.value)} />
+                </div>
 
-            <label>Imagen de la factura</label>
-            <input type="file" />
-          </div>
+                <div className="form-group">
+                    <label>Imagen de la factura (URL)</label>
+                    <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL de la imagen" />
+                </div>
+            </div>
+
+            <button className="register-button" onClick={handleRegistrarSolicitud}>Registrar</button>
         </div>
-
-        <button className="register-button" onClick={handleRegistrarSolicitud}>Registrar</button>
-      </div>
     );
 };
 

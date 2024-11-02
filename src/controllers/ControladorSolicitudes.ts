@@ -13,6 +13,7 @@ interface SolicitudRequest{
     farmacia: Farmacia;
     estadoSolicitud: Estado;
     usuario: Usuario
+    urlImagen: string
 }
 
 
@@ -81,7 +82,7 @@ export class ControladorSolicitudes {
     // Método para crear una nueva solicitud
     async crearSolicitud(solicitud: SolicitudRequest) {
 
-        if (!solicitud.numSolicitud || !solicitud.fecha || !solicitud.medicamento || !solicitud.farmacia || !solicitud.estadoSolicitud || !solicitud.usuario) {
+        if (!solicitud.numSolicitud || !solicitud.fecha || !solicitud.medicamento || !solicitud.farmacia || !solicitud.estadoSolicitud || !solicitud.usuario || !solicitud.urlImagen) {
             throw new Error('Invalid data');
         }
 
@@ -93,6 +94,7 @@ export class ControladorSolicitudes {
         nuevaSolicitud.farmacia = solicitud.farmacia;
         nuevaSolicitud.estadoSolicitud = solicitud.estadoSolicitud;
         nuevaSolicitud.usuario = solicitud.usuario;
+        nuevaSolicitud.urlImagen = solicitud.urlImagen;
 
         const savedSolicitud = await this.dataSource.manager.save(nuevaSolicitud);
         this.solicitudes.push(savedSolicitud); // Agrega la solicitud guardada a la memoria
