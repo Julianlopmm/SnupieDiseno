@@ -51,6 +51,7 @@ export class ControladorFarmacias {
         await this.dataSource.manager.save(farmacia);
         this.ListaSingleton.agregarFarmacia(farmacia);
         console.log(`Farmacia creada: ${farmacia.nombre}`);
+        return farmacia;
 
     }
 

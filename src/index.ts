@@ -153,7 +153,7 @@ AppDataSource.initialize()
 
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+    app.listen(PORT, () => {0
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
     });
   })
