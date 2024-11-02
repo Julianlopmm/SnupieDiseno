@@ -40,7 +40,7 @@ function ConfigurarMedicamento({ medicamento }) {
       <div className="medication-info">
         <h3>{medicamento.nombre}</h3>
         <img src={medicamento.urlImagen} alt={medicamento.nombre} className="med-image" />
-        <p><strong>Presentación:</strong> {medicamento.presentacion ? medicamento.presentacion.nombre : 'N/A'}</p> {/* Agrega esta línea */}
+        <p><strong>Presentación:</strong> {medicamento.presentacion ? medicamento.presentacion.nombre : 'N/A'}</p> {}
       </div>
       <div className="form-group">
         <label>Estado</label>
