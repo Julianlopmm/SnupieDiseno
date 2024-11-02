@@ -2,11 +2,13 @@ import { AppDataSource } from "./data-source";
 import { ControladorMedicamentos } from "./controllers/ControladorMedicamentos";
 import { ControladorSolicitudes } from "./controllers/ControladorSolicitudes";
 import { ControladorUsuario } from "./controllers/ControladorUsuario";
-import { ListaUsuariosSingleton } from "./ListaSingleton";
+import { ControladorFarmacias } from "./controllers/ControladorFarmacias";
+import { ListaSingleton } from "./ListaSingleton";
 import express from 'express';
 
 AppDataSource.initialize()
   .then(async () => {
+    const controladorFarmacias = new ControladorFarmacias();
     const controladorUsuario = new ControladorUsuario();
     const controladorMedicamentos = new ControladorMedicamentos();
     const controladorSolicitudes = new ControladorSolicitudes();
@@ -38,7 +40,7 @@ AppDataSource.initialize()
     });
 
 
-    /*
+
     app.get('/usuarios/login', async (req, res) => {
       try {
         const usuario = await controladorUsuario.login(req.body);
@@ -47,7 +49,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener usuario", error: error.message });
       }
     });
-*/
+
     app.post('/usuarios', async (req, res) => {
       try {
         const nuevoUsuario = await controladorUsuario.crearUsuario(req.body);
@@ -137,6 +139,17 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
       }
     })
+
+    // FARMACIAS
+
+    app.post('/farmacias', async (req, res) => {
+      try {
+        const nuevaFarmacia = await controladorFarmacias.crearFarmacia(req.body);
+        res.json(nuevaFarmacia);
+      } catch (error) {
+        res.status(500).json({ message: "Error al crear farmacia", error: error.message });
+      }
+    });
 
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;

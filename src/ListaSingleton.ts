@@ -1,8 +1,13 @@
 import { Usuario } from './entity/Usuario';
+import { Medicamento } from './entity/Medicamento';
+import { Farmacia } from './entity/Farmacia';
+
 
 export class ListaSingleton {
     private static instance: ListaSingleton;
     private usuarios: Usuario[] = [];
+    private medicamentos: Medicamento[] = [];
+    private farmacias: Farmacia[] = [];
 
     private constructor() {}
 
@@ -23,5 +28,29 @@ export class ListaSingleton {
 
     public agregarUsuario(usuario: Usuario): void {
         this.usuarios.push(usuario);
+    }
+
+    public getMedicamentos(): Medicamento[] {
+        return this.medicamentos;
+    }
+
+    public setMedicamentos(medicamentos: Medicamento[]): void {
+        this.medicamentos = medicamentos;
+    }
+
+    public agregarMedicamento(medicamento: Medicamento): void {
+        this.medicamentos.push(medicamento);
+    }
+
+    public getFarmacias(): Farmacia[] {
+        return this.farmacias;
+    }
+
+    public setFarmacias(farmacias: Farmacia[]): void {
+        this.farmacias = farmacias;
+    }
+
+    public agregarFarmacia(farmacia: Farmacia): void {
+        this.farmacias.push(farmacia);
     }
 }

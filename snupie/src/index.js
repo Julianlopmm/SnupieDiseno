@@ -11,7 +11,7 @@ import AsignarMedicamentos from './AsignarMedicamentos';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AsignarMedicamentos /> {/* Usa el componente exportado */}
+    <App /> {/* Usa el componente exportado */}
   </React.StrictMode>
 );
 
