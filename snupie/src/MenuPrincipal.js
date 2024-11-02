@@ -15,7 +15,7 @@ function MenuPrincipal() {
       <h2 className="subtitle">Sistema de Puntos</h2>
       <div className="buttons-container">
         <button className="menu-button" onClick={() => handleNavigation('/registrarSolicitud')}>
-          Registrar Factura
+          Registrar Solicitud
         </button>
         <button className="menu-button" onClick={() => handleNavigation('/asignarMedicamento')}>
           Configurar Medicamentos

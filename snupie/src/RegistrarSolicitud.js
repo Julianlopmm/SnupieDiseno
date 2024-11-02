@@ -10,11 +10,14 @@ const RegistrarSolicitud = () => {
     const [farmacias, setFarmacias] = useState([]);
     const [productos, setProductos] = useState([]);
 
+    // Obtener el ID del usuario desde localStorage
+    const userId = localStorage.getItem('userId');
+
     // Fetch para obtener las farmacias
     useEffect(() => {
         const fetchFarmacias = async () => {
             try {
-                const response = await fetch('http://localhost:3000/farmacias');
+                const response = await fetch('http://localhost:5000/farmacias');
                 if (response.ok) {
                     const data = await response.json();
                     setFarmacias(data);
@@ -33,7 +36,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchMedicamentos = async () => {
             try {
-                const response = await fetch('http://localhost:3000/medicamentos');
+                const response = await fetch('http://localhost:5000/medicamentos');
                 if (response.ok) {
                     const data = await response.json();
                     setProductos(data);
@@ -52,14 +55,24 @@ const RegistrarSolicitud = () => {
     const handleRegistrarSolicitud = async () => {
         try {
             const solicitudData = {
-                farmacia,
-                producto,
+                numSolicitud: numeroFactura,
                 fecha,
-                numeroFactura,
-                cantidad,
+                medicamento: {
+                    id: parseInt(producto, 10)
+                },
+                cantidad: parseInt(cantidad, 10),
+                farmacia: {
+                    id: parseInt(farmacia, 10)
+                },
+                estadoSolicitud: {
+                    id: 1 // ID fijo para un estado inicial
+                },
+                usuario: {
+                    id: parseInt(userId, 10) // ID del usuario autenticado
+                }
             };
 
-            const response = await fetch('http://localhost:3000/solicitud', {
+            const response = await fetch('http://localhost:5000/solicitud', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +105,7 @@ const RegistrarSolicitud = () => {
             <select value={farmacia} onChange={(e) => setFarmacia(e.target.value)}>
               <option value="">Seleccione</option>
               {farmacias.map((farmacia) => (
-                <option key={farmacia.id} value={farmacia.nombre}>{farmacia.nombre}</option>
+                <option key={farmacia.id} value={farmacia.id}>{farmacia.nombre}</option>
               ))}
             </select>
           </div>
@@ -102,7 +115,7 @@ const RegistrarSolicitud = () => {
             <select value={producto} onChange={(e) => setProducto(e.target.value)}>
               <option value="">Seleccione</option>
               {productos.map((producto) => (
-                <option key={producto.id} value={producto.nombre}>{producto.nombre}</option>
+                <option key={producto.id} value={producto.id}>{producto.nombre}</option>
               ))}
             </select>
           </div>

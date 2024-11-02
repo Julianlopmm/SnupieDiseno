@@ -21,6 +21,7 @@ function Login() {
         const data = await response.json();
         // Maneja el resultado de la respuesta, por ejemplo, guarda el token o datos del usuario
         console.log('Login exitoso:', data);
+        localStorage.setItem('userId', data.id);
         navigate('/menu-principal');
       } else {
         console.error('Error en el login:', response.statusText);
