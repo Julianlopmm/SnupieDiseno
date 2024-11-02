@@ -91,4 +91,12 @@
   button:hover {
     opacity: 0.9;
   }
+
+  .factura-imagen {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+  }
+  
   

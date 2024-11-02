@@ -140,10 +140,14 @@ export class ControladorSolicitudes {
         return solicitudActualizada;
     }
 
-    async obtenerSolicitudesPendientes(){
-        const estadoPendiente = await this.dataSource.manager.findOne(Estado, {where: {nombre: 'Pendiente'}});
-        const solicitudesPendientes = await this.dataSource.manager.find(Solicitud, {where: {estadoSolicitud: estadoPendiente}});
+    async obtenerSolicitudesPendientes() {
+        const estadoPendiente = await this.dataSource.manager.findOne(Estado, { where: { nombre: 'Pendiente' } });
+        const solicitudesPendientes = await this.dataSource.manager.find(Solicitud, {
+            where: { estadoSolicitud: estadoPendiente },
+            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
+        });
         return solicitudesPendientes;
     }
+    
 
 }
