@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import './RegistrarSolicitud.css'; // Importa el archivo de estilos
 
 const RegistrarSolicitud = () => {
@@ -8,54 +7,124 @@ const RegistrarSolicitud = () => {
     const [fecha, setFecha] = useState('');
     const [numeroFactura, setNumeroFactura] = useState('');
     const [cantidad, setCantidad] = useState('');
-  
+    const [farmacias, setFarmacias] = useState([]);
+    const [productos, setProductos] = useState([]);
+
+    // Fetch para obtener las farmacias
+    useEffect(() => {
+        const fetchFarmacias = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/farmacias');
+                if (response.ok) {
+                    const data = await response.json();
+                    setFarmacias(data);
+                } else {
+                    console.error('Error al obtener farmacias:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud de farmacias:', error);
+            }
+        };
+
+        fetchFarmacias();
+    }, []);
+
+    // Fetch para obtener los medicamentos
+    useEffect(() => {
+        const fetchMedicamentos = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/medicamentos');
+                if (response.ok) {
+                    const data = await response.json();
+                    setProductos(data);
+                } else {
+                    console.error('Error al obtener medicamentos:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud de medicamentos:', error);
+            }
+        };
+
+        fetchMedicamentos();
+    }, []);
+
+    // Función para registrar la solicitud
+    const handleRegistrarSolicitud = async () => {
+        try {
+            const solicitudData = {
+                farmacia,
+                producto,
+                fecha,
+                numeroFactura,
+                cantidad,
+            };
+
+            const response = await fetch('http://localhost:3000/solicitud', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(solicitudData),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert('Solicitud registrada con éxito');
+                console.log('Solicitud registrada:', data);
+            } else {
+                console.error('Error al registrar solicitud:', response.statusText);
+                alert('Error al registrar la solicitud');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud de registro:', error);
+            alert('Error de red al registrar la solicitud');
+        }
+    };
+
     return (
       <div className="register-container">
         <h1 className="title">Snupie</h1>
         <h2 className="subtitle">Registrar Solicitud</h2>
-  
+
         <div className="form-grid">
           <div className="form-group">
             <label>Farmacia</label>
             <select value={farmacia} onChange={(e) => setFarmacia(e.target.value)}>
               <option value="">Seleccione</option>
-              <option value="FarmaValue">FarmaValue</option>
-              <option value="Fischel">Fischel</option>
-              <option value="La Bomba">La Bomba</option>
-              <option value="Sucre">Sucre</option>
-              <option value="Walmart">Walmart</option>
+              {farmacias.map((farmacia) => (
+                <option key={farmacia.id} value={farmacia.nombre}>{farmacia.nombre}</option>
+              ))}
             </select>
           </div>
-  
+
           <div className="form-group">
             <label>Producto</label>
             <select value={producto} onChange={(e) => setProducto(e.target.value)}>
               <option value="">Seleccione</option>
-              <option value="Acetaminofén (Pastilla)">Acetaminofén (Pastilla)</option>
-              <option value="Aleve (Pastilla)">Aleve (Pastilla)</option>
-              <option value="Enantyum (Boli)">Enantyum (Boli)</option>
-              <option value="Ibuprofeno (Pastilla)">Ibuprofeno (Pastilla)</option>
+              {productos.map((producto) => (
+                <option key={producto.id} value={producto.nombre}>{producto.nombre}</option>
+              ))}
             </select>
           </div>
-  
+
           <div className="form-group">
             <label>Fecha</label>
             <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
           </div>
-  
+
           <div className="form-group datos">
             <label>Número de Factura</label>
             <input type="text" value={numeroFactura} onChange={(e) => setNumeroFactura(e.target.value)} />
-  
+
             <label>Cantidad</label>
             <input type="number" value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
-  
+
             <label>Imagen de la factura</label>
             <input type="file" />
           </div>
         </div>
-  
-        <button className="register-button">Registrar</button>
+
+        <button className="register-button" onClick={handleRegistrarSolicitud}>Registrar</button>
       </div>
     );
 };
