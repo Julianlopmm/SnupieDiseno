@@ -4,6 +4,8 @@ import './ReviewRequests.css'; // Asegúrate de tener un archivo CSS para estilo
 function ReviewRequests() {
   const [solicitudes, setSolicitudes] = useState([]);
   const [solicitudesArregladas, setSolicitudesArregladas] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredSolicitudes, setFilteredSolicitudes] = useState([]);
 
   useEffect(() => {
     // Realizar la solicitud para obtener las solicitudes pendientes
@@ -28,6 +30,7 @@ function ReviewRequests() {
           imagenFactura: solicitud.medicamento.urlImagen, // Asumiendo que la URL de la imagen está aquí
         }));
         setSolicitudesArregladas(nuevasSolicitudesArregladas); // Guardar las solicitudes transformadas
+        setFilteredSolicitudes(nuevasSolicitudesArregladas); // Inicializar solicitudes filtradas
       })
       .catch(error => {
         console.error('Error al cargar las solicitudes:', error);
@@ -48,6 +51,7 @@ function ReviewRequests() {
         console.log('Solicitud aprobada:', data);
         // Actualizar el estado de las solicitudes si es necesario
         setSolicitudesArregladas(prev => prev.filter(solicitud => solicitud.id !== id));
+        setFilteredSolicitudes(prev => prev.filter(solicitud => solicitud.id !== id));
       })
       .catch(error => {
         console.error('Error al aprobar la solicitud:', error);
@@ -68,10 +72,20 @@ function ReviewRequests() {
         console.log('Solicitud rechazada:', data);
         // Actualizar el estado de las solicitudes si es necesario
         setSolicitudesArregladas(prev => prev.filter(solicitud => solicitud.id !== id));
+        setFilteredSolicitudes(prev => prev.filter(solicitud => solicitud.id !== id));
       })
       .catch(error => {
         console.error('Error al rechazar la solicitud:', error);
       });
+  };
+
+  const handleSearch = () => {
+    const filtered = solicitudesArregladas.filter(solicitud =>
+      solicitud.farmacia.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      solicitud.producto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      solicitud.numeroFactura.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredSolicitudes(filtered);
   };
 
   return (
@@ -80,14 +94,19 @@ function ReviewRequests() {
       <h2 className="subtitle">Revisión de solicitudes</h2>
 
       <div className="search-bar">
-        <input type="text" placeholder="Buscar" />
-        <button className="search-button">🔍</button>
+        <input
+          type="text"
+          placeholder="Buscar"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+        <button className="search-button" onClick={handleSearch}>🔍</button>
       </div>
 
-      {solicitudesArregladas.length === 0 ? (
+      {filteredSolicitudes.length === 0 ? (
         <p>No hay solicitudes pendientes.</p>
       ) : (
-        solicitudesArregladas.map((solicitud, index) => (
+        filteredSolicitudes.map((solicitud, index) => (
           <div key={index} className="solicitud-card">
             <p><strong>Farmacia:</strong> {solicitud.farmacia}</p>
             <p><strong>Fecha de canje:</strong> {solicitud.fechaCanje}</p>
