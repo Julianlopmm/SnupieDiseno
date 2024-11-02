@@ -1,10 +1,10 @@
 .main-menu-container {
-  background-color: #d3d3d3; /* Fondo gris claro */
-  padding: 50px;
-  border-radius: 12px;
-  max-width: 800px;
-  margin: auto;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #d3d3d3; /* Color gris claro */
 }
 
 .title {
