@@ -1,0 +1,57 @@
+.assign-container {
+    background-color: #d3d3d3; /* Fondo gris claro */
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .title {
+    font-size: 48px;
+    text-align: center;
+    color: #3e3b5b; /* Color morado oscuro */
+  }
+  
+  .subtitle {
+    text-align: center;
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .medications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .med-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .med-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .configure-button {
+    background-color: #6a5acd; /* Morado */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .configure-button:hover {
+    opacity: 0.9;
+  }
+  
