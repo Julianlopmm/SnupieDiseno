@@ -12,14 +12,18 @@ export class ControladorMedicamentos {
 
     private async init() {
         await this.inicializarPresentaciones();
-        await this.obtenerMedicamentos();
+        await this.actualizarMedicamentos();
         this.imprimirMedicamentos(); // Imprime los medicamentos después de cargarlos
     }
 
-    async obtenerMedicamentos() {
+    async actualizarMedicamentos() {
         const medicamentos = await this.dataSource.manager.find(Medicamento, { relations: ["presentacion"] });
         this.ListaSingleton.setMedicamentos(medicamentos); // Usa la instancia global
         return medicamentos;
+    }
+
+    async obtenerMedicamentos() {
+        return this.ListaSingleton.getMedicamentos(); // Usa la instancia global
     }
 
 

@@ -143,7 +143,15 @@ AppDataSource.initialize()
     })
 
     // FARMACIAS
-
+    app.get('/farmacias', async (req, res) => {
+      try {
+        const farmacias = await controladorFarmacias.obtenerFarmacias();
+        res.json(farmacias);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener farmacias", error: error.message });
+      }
+    });
+    
     app.post('/farmacias', async (req, res) => {
       try {
         const nuevaFarmacia = await controladorFarmacias.crearFarmacia(req.body);

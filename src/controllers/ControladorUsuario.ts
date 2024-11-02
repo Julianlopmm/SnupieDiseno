@@ -21,7 +21,7 @@ export class ControladorUsuario {
     
     async init() {
         await this.crearRolesPredeterminados();
-        await this.obtenerUsuarios();
+        await this.actualizarUsuarios();
         this.imprimirUsuarios();
     }
 
@@ -47,10 +47,14 @@ export class ControladorUsuario {
 
     
 
-    async obtenerUsuarios() {
+    async actualizarUsuarios() {
         const usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
         this.ListaSingleton.setUsuarios(usuarios); // Usa la instancia global
         return usuarios;
+    }
+
+    async obtenerUsuarios() {
+        return this.ListaSingleton.getUsuarios(); // Usa la instancia global
     }
     
 

@@ -19,15 +19,20 @@ export class ControladorFarmacias {
 
     // Método de inicialización para cargar farmacias
     private async init() {
-        await this.obtenerFarmacias();
+        await this.actualizarFarmacias();
         this.imprimirFarmacias(); // Imprime las farmacias después de cargarlas
     }
 
     // Método para obtener todas las farmacias desde la base de datos
-    async obtenerFarmacias() {
+    async actualizarFarmacias() {
         const farmacias = await this.dataSource.manager.find(Farmacia);
         this.ListaSingleton.setFarmacias(farmacias); // Usa la instancia global
         return farmacias;
+    }
+
+    // Método para obtener todas las farmacias
+    async obtenerFarmacias() {
+        return this.ListaSingleton.getFarmacias(); // Usa la instancia global
     }
 
     // Método para imprimir todas las farmacias
