@@ -83,28 +83,36 @@ export class ControladorUsuario {
         if (!req.nombre || !req.contrasena || !req.rol || !req.email) {
             throw new Error("Invalid user data");
         }
-
+    
         const usuario = new Usuario();
         usuario.nombre = req.nombre;
         usuario.contrasena = req.contrasena;
         usuario.email = req.email;
-
+    
         const roleEntity = await this.dataSource.manager.findOne(Rol, { where: { id: req.rol } });
         if (!roleEntity) {
             throw new Error("Role not found");
         }
-
+    
         usuario.rol = roleEntity;
-
+    
         try {
             const savedUsuario = await this.dataSource.manager.save(usuario);
             this.ListaSingleton.agregarUsuario(savedUsuario); // Usa la instancia global
             return savedUsuario;
         } catch (error) {
             console.error("Error creating user:", error);
-            throw error;
+            // Agrega más información para depurar
+            if (error.code) {
+                console.error("Código de error:", error.code);
+            }
+            if (error.detail) {
+                console.error("Detalle de error:", error.detail);
+            }
+            throw new Error("Error al guardar el usuario en la base de datos");
         }
     }
+    
 
     async login(req: { email: string, contrasena: string }) {
         const usuario = await this.dataSource.manager.findOne(Usuario, { where: { email: req.email, contrasena: req.contrasena }, relations: ["rol"] });
