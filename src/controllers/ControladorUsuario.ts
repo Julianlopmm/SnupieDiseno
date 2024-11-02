@@ -2,6 +2,7 @@ import { Usuario } from "../entity/Usuario";
 import { Rol } from "../entity/Rol";
 import { AppDataSource } from "../data-source";
 import { ListaSingleton } from "../ListaSingleton";
+import { Punto } from "../entity/Punto";
 
 interface UsuarioRequest {
     nombre: string;
@@ -120,6 +121,12 @@ export class ControladorUsuario {
             throw new Error("User not found");
         }
         return usuario;
+    }
+
+    async obtenerPuntosPorUsuario(id: number) {
+        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id } });
+        const puntos = await this.dataSource.manager.find(Punto, { where: { usuario: usuario }, relations: ["medicamento"] });
+        return { usuario, puntos };
     }
 
 }

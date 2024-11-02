@@ -165,8 +165,17 @@ AppDataSource.initialize()
       }
     });
 
+    app.get('/puntos/:id', async (req, res) => {
+      try {
+        const puntos = await controladorUsuario.obtenerPuntosPorUsuario(parseInt(req.params.id));
+        res.json(puntos);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener puntos", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
     });

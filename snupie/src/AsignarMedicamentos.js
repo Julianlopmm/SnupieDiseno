@@ -10,7 +10,7 @@ function AsignarMedicamentos() {
   useEffect(() => {
     const fetchMedicamentos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/medicamentos'); 
+        const response = await fetch('http://localhost:8080/medicamentos'); 
         if (!response.ok) {
           throw new Error('Error al obtener los medicamentos');
         }

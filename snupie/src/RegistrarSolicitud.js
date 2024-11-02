@@ -18,7 +18,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchFarmacias = async () => {
             try {
-                const response = await fetch('http://localhost:5000/farmacias');
+                const response = await fetch('http://localhost:8080/farmacias');
                 if (response.ok) {
                     const data = await response.json();
                     setFarmacias(data);
@@ -37,7 +37,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchMedicamentos = async () => {
             try {
-                const response = await fetch('http://localhost:5000/medicamentos');
+                const response = await fetch('http://localhost:8080/medicamentos');
                 if (response.ok) {
                     const data = await response.json();
                     setProductos(data);
@@ -75,7 +75,7 @@ const RegistrarSolicitud = () => {
             };
             
 
-            const response = await fetch('http://localhost:5000/solicitud', {
+            const response = await fetch('http://localhost:8080/solicitud', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

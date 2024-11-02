@@ -4,6 +4,7 @@ import { Estado } from "../entity/Estado";
 import { Medicamento } from "../entity/Medicamento";
 import { Farmacia } from "../entity/Farmacia";
 import { Usuario } from "../entity/Usuario";
+import { Punto } from "../entity/Punto";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -36,7 +37,7 @@ export class ControladorSolicitudes {
 
     // Método para obtener todas las solicitudes desde la base de datos
     async obtenerSolicitudes() {
-        this.solicitudes = await this.dataSource.manager.find(Solicitud);
+        this.solicitudes = await this.dataSource.manager.find(Solicitud, { relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario'] });
     }
 
     async crearEstadosPredeterminados(){
@@ -74,7 +75,7 @@ export class ControladorSolicitudes {
     async obtenerSolicitudPorId(id: number) {
         let solicitud = this.solicitudes.find(solicitud => solicitud.id === id);
         if (!solicitud) {
-            solicitud = await this.dataSource.manager.findOne(Solicitud, { where: { id } });
+            solicitud = await this.dataSource.manager.findOne(Solicitud, { where: { id }, relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario'] });
         }
         return solicitud;
     }
@@ -98,6 +99,8 @@ export class ControladorSolicitudes {
 
         const savedSolicitud = await this.dataSource.manager.save(nuevaSolicitud);
         this.solicitudes.push(savedSolicitud); // Agrega la solicitud guardada a la memoria
+        
+
         return savedSolicitud;
     }
 
@@ -118,15 +121,33 @@ export class ControladorSolicitudes {
 
     // Método para aceptar una solicitud
 
-    async aceptarSolicitud(idSolicitud: number){
+    async aceptarSolicitud(idSolicitud: number) {
         const solicitud = await this.obtenerSolicitudPorId(idSolicitud);
-        if (!solicitud){
+        if (!solicitud) {
             throw new Error('Solicitud no encontrada');
         }
-
+    
         const estadoAceptado = await this.dataSource.manager.findOne(Estado, {where: {nombre: 'Aceptada'}});
+        if (!estadoAceptado) {
+            throw new Error('Estado "Aceptada" no encontrado');
+        }
+        console.log(solicitud);
         solicitud.estadoSolicitud = estadoAceptado;
         const solicitudActualizada = await this.dataSource.manager.save(solicitud);
+    
+        let puntosMedicamento = await this.dataSource.manager.findOne(Punto, {where: {medicamento: solicitud.medicamento, usuario: solicitud.usuario}});
+        let medicamento = await this.dataSource.manager.findOne(Medicamento, {where: {id: solicitud.medicamento.id}});
+        if (!puntosMedicamento) {
+            let punto = new Punto();
+            punto.cantidad = solicitud.cantidad * medicamento.puntosPorCompra;
+            punto.medicamento = solicitud.medicamento;
+            punto.usuario = solicitud.usuario;
+            await this.dataSource.manager.save(punto);
+        } else {
+            puntosMedicamento.cantidad += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
+            await this.dataSource.manager.save(puntosMedicamento);
+        }
+    
         return solicitudActualizada;
     }
 
