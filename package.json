@@ -10,6 +10,7 @@
       "typescript": "^4.5.2"
    },
    "dependencies": {
+      "@google-cloud/cloud-sql-connector": "^1.4.0",
       "cors": "^2.8.5",
       "express": "^4.21.1",
       "mysql": "npm:mysql2@^2.1.0",
