@@ -1,7 +1,7 @@
 import { Usuario } from "../entity/Usuario";
 import { Rol } from "../entity/Rol";
 import { AppDataSource } from "../data-source";
-import { ListaUsuariosSingleton } from "../ListaUsuariosSingleton";
+import { ListaSingleton } from "../ListaSingleton";
 
 interface UsuarioRequest {
     nombre: string;
@@ -11,7 +11,7 @@ interface UsuarioRequest {
 }
 
 export class ControladorUsuario {
-    private listaUsuariosSingleton = ListaUsuariosSingleton.getInstance(); // Obtén la instancia única
+    private ListaSingleton = ListaSingleton.getInstance(); // Obtén la instancia única
 
     private roles: Rol[] = [];
     
@@ -49,13 +49,13 @@ export class ControladorUsuario {
 
     async obtenerUsuarios() {
         const usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
-        this.listaUsuariosSingleton.setUsuarios(usuarios); // Usa la instancia global
+        this.ListaSingleton.setUsuarios(usuarios); // Usa la instancia global
         return usuarios;
     }
     
 
     async imprimirUsuarios() {
-        const usuarios = this.listaUsuariosSingleton.getUsuarios(); // Usa la instancia global
+        const usuarios = this.ListaSingleton.getUsuarios(); // Usa la instancia global
         if (usuarios.length === 0) {
             console.log('No hay usuarios');
         }
@@ -68,7 +68,7 @@ export class ControladorUsuario {
     }
 
     async obtenerUsuarioPorId(id: number) {
-        let usuario = this.listaUsuariosSingleton.getUsuarios().find(usuario => usuario.id === id);
+        let usuario = this.ListaSingleton.getUsuarios().find(usuario => usuario.id === id);
         if (!usuario) {
             usuario = await this.dataSource.manager.findOne(Usuario, { where: { id } });
         }
@@ -94,7 +94,7 @@ export class ControladorUsuario {
 
         try {
             const savedUsuario = await this.dataSource.manager.save(usuario);
-            this.listaUsuariosSingleton.agregarUsuario(savedUsuario); // Usa la instancia global
+            this.ListaSingleton.agregarUsuario(savedUsuario); // Usa la instancia global
             return savedUsuario;
         } catch (error) {
             console.error("Error creating user:", error);

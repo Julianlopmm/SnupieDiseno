@@ -1,16 +1,16 @@
 import { Usuario } from './entity/Usuario';
 
-export class ListaUsuariosSingleton {
-    private static instance: ListaUsuariosSingleton;
+export class ListaSingleton {
+    private static instance: ListaSingleton;
     private usuarios: Usuario[] = [];
 
     private constructor() {}
 
-    public static getInstance(): ListaUsuariosSingleton {
-        if (!ListaUsuariosSingleton.instance) {
-            ListaUsuariosSingleton.instance = new ListaUsuariosSingleton();
+    public static getInstance(): ListaSingleton {
+        if (!ListaSingleton.instance) {
+            ListaSingleton.instance = new ListaSingleton();
         }
-        return ListaUsuariosSingleton.instance;
+        return ListaSingleton.instance;
     }
 
     public getUsuarios(): Usuario[] {

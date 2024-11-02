@@ -2,7 +2,7 @@ import { AppDataSource } from "./data-source";
 import { ControladorMedicamentos } from "./controllers/ControladorMedicamentos";
 import { ControladorSolicitudes } from "./controllers/ControladorSolicitudes";
 import { ControladorUsuario } from "./controllers/ControladorUsuario";
-import { ListaUsuariosSingleton } from "./ListaUsuariosSingleton";
+import { ListaUsuariosSingleton } from "./ListaSingleton";
 import express from 'express';
 
 AppDataSource.initialize()
