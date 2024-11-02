@@ -15,7 +15,10 @@ function Login() {
         <label>Password</label>
         <input type="password" placeholder="Value" />
 
-        <button className="login-button">Log In</button>
+        <button 
+          className="login-button"
+          onClick={() => navigate('/menu-principal')}
+        >Log In</button>
         <button 
           className="signup-button"
           onClick={() => navigate('/signup')}

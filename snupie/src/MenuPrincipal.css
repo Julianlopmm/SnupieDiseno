@@ -1,0 +1,40 @@
+.main-menu-container {
+  background-color: #d3d3d3; /* Fondo gris claro */
+  padding: 50px;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 48px;
+  color: #3e3b5b; /* Color morado oscuro */
+}
+
+.subtitle {
+  font-size: 24px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.menu-button {
+  background-color: #6a5acd; /* Morado */
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  min-width: 150px;
+  margin-left: 20px;
+}
+
+.menu-button:hover {
+  opacity: 0.9;
+}
