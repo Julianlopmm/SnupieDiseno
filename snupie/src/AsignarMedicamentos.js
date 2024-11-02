@@ -39,10 +39,11 @@ function AsignarMedicamentos() {
       <div className="medications-grid">
         {medicamentos.map((med, index) => (
           <div key={index} className="med-card">
-            <img src={med.imagen || 'ruta-a-imagen-por-defecto'} alt={med.nombre} className="med-image" />
+            <img src={med.urlImagen || 'ruta-a-imagen-por-defecto'} alt={med.nombre} className="med-image" />
             <h3>{med.nombre}</h3>
             <p>{med.precio ? `$${med.precio}` : 'Precio no disponible'}</p>
             <p>{med.descripcion || 'Descripción no disponible'}</p>
+            <p><strong>Presentación:</strong> {med.presentacion ? med.presentacion.nombre : 'N/A'}</p> {/* Agrega esta línea */}
             <button className="configure-button" onClick={() => handleConfigureClick(med)}>Configurar</button>
           </div>
         ))}
