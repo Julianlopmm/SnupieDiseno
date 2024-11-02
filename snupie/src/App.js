@@ -4,7 +4,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 import MenuPrincipal from './MenuPrincipal'; // Importa MenuPrincipal
 import RegistrarSolicitud from './RegistrarSolicitud'; // Importa RegistrarSolicitud
-import ConfigurarMedicamento from './ConfigurarMedicamento'; // Importa ConfigurarMedicamento
+import AsignarMedicamentos from './AsignarMedicamentos';
 import ReviewRequest from './ReviewRequests'; // Importa ReviewRequest
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/menu-principal" element={<MenuPrincipal />} />
         <Route path="/registrarSolicitud" element={<RegistrarSolicitud />} />
-        <Route path="/configurarMedicamento" element={<ConfigurarMedicamento />} />
+        <Route path="/asignarMedicamento" element={<AsignarMedicamentos />} />
         <Route path="/revisarSolicitudes" element={<ReviewRequest />} />
       </Routes>
     </Router>

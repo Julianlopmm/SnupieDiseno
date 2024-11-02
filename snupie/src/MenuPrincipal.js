@@ -17,7 +17,7 @@ function MenuPrincipal() {
         <button className="menu-button" onClick={() => handleNavigation('/registrarSolicitud')}>
           Registrar Factura
         </button>
-        <button className="menu-button" onClick={() => handleNavigation('/configurarMedicamento')}>
+        <button className="menu-button" onClick={() => handleNavigation('/asignarMedicamento')}>
           Configurar Medicamentos
         </button>
         <button className="menu-button" onClick={() => handleNavigation('/revisarSolicitudes')}>
