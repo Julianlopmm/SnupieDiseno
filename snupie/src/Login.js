@@ -22,6 +22,7 @@ function Login() {
         // Maneja el resultado de la respuesta, por ejemplo, guarda el token o datos del usuario
         console.log('Login exitoso:', data);
         localStorage.setItem('userId', data.id);
+        localStorage.setItem('rol', data.rol.id);
         navigate('/menu-principal');
       } else {
         console.error('Error en el login:', response.statusText);

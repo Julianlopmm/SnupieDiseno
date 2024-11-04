@@ -37,7 +37,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchMedicamentos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/medicamentos');
+                const response = await fetch('http://localhost:8080/activos');
                 if (response.ok) {
                     const data = await response.json();
                     setProductos(data);

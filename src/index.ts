@@ -88,6 +88,15 @@ AppDataSource.initialize()
       }
     });
 
+    app.get('/activos', async (req, res) => {
+      try {
+        const medicamentos = await controladorMedicamentos.obtenerMedicamentosActivos();
+        res.json(medicamentos);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener medicamentos activos", error: error.message });
+      }
+    });
+
     app.get('/medicamentos/:id', async (req, res) => {
       try {
         const medicamento = await controladorMedicamentos.obtenerMedicamentoPorId(parseInt(req.params.id));
@@ -108,7 +117,6 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al configurar medicamento", error: error.message });
       }
     });
-    
 
     app.post('/solicitud', async (req, res) => {
       try {

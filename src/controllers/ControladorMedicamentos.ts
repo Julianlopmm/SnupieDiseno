@@ -25,6 +25,12 @@ export class ControladorMedicamentos {
     async obtenerMedicamentos() {
         return this.ListaSingleton.getMedicamentos(); // Usa la instancia global
     }
+    
+    async obtenerMedicamentosActivos() {
+        const medicamentos = this.ListaSingleton.getMedicamentos();
+        const medicamentosActivos = medicamentos.filter(medicamento => medicamento.estadoPromocion === true);
+        return medicamentosActivos;
+    }
 
 
     private async inicializarPresentaciones() {
