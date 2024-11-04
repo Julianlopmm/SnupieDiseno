@@ -34,7 +34,7 @@ export class ControladorMedicamentos {
 
 
     private async inicializarPresentaciones() {
-        const presentaciones = ["pastilla", "boli", "botella"];
+        const presentaciones = ["Pastilla", "Boli", "Botella"];
 
         for (const nombre of presentaciones) {
             // Verifica si la presentación ya existe

@@ -35,6 +35,14 @@
   margin-left: 20px;
 }
 
+.menu-button:disabled {
+  background-color: grey;
+  color: white; /* Opcional: para que el texto contraste */
+  cursor: not-allowed;
+  opacity: 0.6; /* Opcional: para dar una apariencia más tenue */
+}
+
+
 .menu-button:hover {
   opacity: 0.9;
 }
