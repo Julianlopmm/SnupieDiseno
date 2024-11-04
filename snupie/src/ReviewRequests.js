@@ -9,7 +9,7 @@ function ReviewRequests() {
 
   useEffect(() => {
     // Realizar la solicitud para obtener las solicitudes pendientes
-    fetch('http://localhost:8080/solicitudes/pendientes')
+    fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitudes/pendientes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');
@@ -38,7 +38,7 @@ function ReviewRequests() {
   }, []); // El array vacío [] significa que esto se ejecutará solo una vez al montar el componente
 
   const handleAprobarSolicitud = (id) => {
-    fetch(`http://localhost:8080/solicitud/aprobar/${id}`, {
+    fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitud/aprobar/${id}`, {
       method: 'PUT',
     })
       .then(response => {
@@ -59,7 +59,7 @@ function ReviewRequests() {
   };
 
   const handleRechazarSolicitud = (id) => {
-    fetch(`http://localhost:8080/solicitud/rechazar/${id}`, {
+    fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitud/rechazar/${id}`, {
       method: 'PUT',
     })
       .then(response => {

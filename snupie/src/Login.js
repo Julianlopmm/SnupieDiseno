@@ -9,7 +9,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:8080/usuarios/login', {
+      const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

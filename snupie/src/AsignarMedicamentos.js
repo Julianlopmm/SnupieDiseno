@@ -10,7 +10,7 @@ function AsignarMedicamentos() {
   useEffect(() => {
     const fetchMedicamentos = async () => {
       try {
-        const response = await fetch('http://localhost:8080/medicamentos'); 
+        const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/medicamentos'); 
         if (!response.ok) {
           throw new Error('Error al obtener los medicamentos');
         }

@@ -22,7 +22,7 @@ function SignUp() {
     
 
     try {
-      const response = await fetch('http://localhost:8080/usuarios', {
+      const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
