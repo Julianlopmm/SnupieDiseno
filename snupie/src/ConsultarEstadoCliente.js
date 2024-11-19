@@ -1,61 +1,49 @@
-import React, { useState } from 'react';
-import './ConsultarEstadoCliente.css'; // Asegúrate de tener un archivo CSS para estilos
+import React, { useState, useEffect } from 'react';
+import './ConsultarEstadoCliente.css';
 
 function ConsultarEstadoCliente() {
-  // Datos de ejemplo
-  const usuarios = [
-    { id: 1, nombre: "Juan Pérez" },
-    { id: 2, nombre: "María López" },
-  ];
-
-  const medicamentosPorUsuario = {
-    1: [
-      {
-        id: 1,
-        nombre: "Paracetamol",
-        urlImagen: "https://via.placeholder.com/150",
-        descripcion: "Medicamento para el alivio del dolor y la fiebre.",
-        puntosAcumulados: 100,
-        puntosUsados: 40,
-        puntosDisponibles: 60,
-      },
-      {
-        id: 3,
-        nombre: "Amoxicilina",
-        urlImagen: "https://via.placeholder.com/150",
-        descripcion: "Antibiótico de amplio espectro.",
-        puntosAcumulados: 120,
-        puntosUsados: 50,
-        puntosDisponibles: 70,
-      },
-    ],
-    2: [
-      {
-        id: 2,
-        nombre: "Ibuprofeno",
-        urlImagen: "https://via.placeholder.com/150",
-        descripcion: "Anti-inflamatorio y analgésico.",
-        puntosAcumulados: 200,
-        puntosUsados: 80,
-        puntosDisponibles: 120,
-      },
-    ],
-  };
-
+  const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [medicamentos, setMedicamentos] = useState([]);
 
+  // Hook para obtener los usuarios al cargar el componente
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de usuarios');
+        }
+        const data = await response.json();
+        setUsuarios(data);
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    };
+
+    fetchUsuarios();
+  }, []);
+
+  // Obtener los medicamentos del usuario seleccionado
+  const fetchMedicamentosUsuario = async (userId) => {
+    try {
+      const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/medicamentosUsuario/${userId}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los medicamentos del usuario');
+      }
+      const data = await response.json();
+      setMedicamentos(data);
+    } catch (error) {
+      console.error('Error al obtener medicamentos del usuario:', error);
+    }
+  };
+
+  // Manejar el cambio de usuario
   const handleUserChange = (event) => {
     const userId = parseInt(event.target.value, 10);
     setSelectedUser(userId);
-    setMedicamentos(medicamentosPorUsuario[userId] || []);
+    fetchMedicamentosUsuario(userId); // Cargar medicamentos del usuario seleccionado
   };
-
-  // Calcular datos globales
-  const totalMedicamentos = medicamentos.length;
-  const totalPuntosAcumulados = medicamentos.reduce((sum, med) => sum + med.puntosAcumulados, 0);
-  const totalPuntosUsados = medicamentos.reduce((sum, med) => sum + med.puntosUsados, 0);
-  const totalPuntosDisponibles = medicamentos.reduce((sum, med) => sum + med.puntosDisponibles, 0);
 
   return (
     <div className="status-container">
@@ -78,10 +66,10 @@ function ConsultarEstadoCliente() {
       {selectedUser && (
         <div className="global-stats">
           <h3>Resumen Global</h3>
-          <p><strong>Total de medicamentos adquiridos y aprobados:</strong> {totalMedicamentos}</p>
-          <p><strong>Cantidad de puntos globales acumulados:</strong> {totalPuntosAcumulados}</p>
-          <p><strong>Cantidad de puntos globales usados en canjes:</strong> {totalPuntosUsados}</p>
-          <p><strong>Cantidad de puntos globales disponibles:</strong> {totalPuntosDisponibles}</p>
+          <p><strong>Total de medicamentos adquiridos y aprobados:</strong> {medicamentos.length}</p>
+          <p><strong>Cantidad de puntos globales acumulados:</strong> {medicamentos.reduce((sum, med) => sum + (med.puntosAcumulados || 0), 0)}</p>
+          <p><strong>Cantidad de puntos globales usados en canjes:</strong> {medicamentos.reduce((sum, med) => sum + (med.puntosUsados || 0), 0)}</p>
+          <p><strong>Cantidad de puntos globales disponibles:</strong> {medicamentos.reduce((sum, med) => sum + (med.puntosDisponibles || 0), 0)}</p>
         </div>
       )}
 
@@ -91,14 +79,14 @@ function ConsultarEstadoCliente() {
             <div key={medicamento.id} className="medication-card">
               <h3 className="medication-name">{medicamento.nombre}</h3>
               <img
-                src={medicamento.urlImagen}
+                src={medicamento.urlImagen || 'https://via.placeholder.com/150'}
                 alt={medicamento.nombre}
                 className="med-image"
               />
-              <p><strong>Descripción:</strong> {medicamento.descripcion}</p>
-              <p><strong>Puntos acumulados:</strong> {medicamento.puntosAcumulados}</p>
-              <p><strong>Puntos usados en canjes:</strong> {medicamento.puntosUsados}</p>
-              <p><strong>Puntos disponibles:</strong> {medicamento.puntosDisponibles}</p>
+              <p><strong>Descripción:</strong> {medicamento.descripcion || 'Sin descripción disponible'}</p>
+              <p><strong>Puntos acumulados:</strong> {medicamento.puntosAcumulados || 0}</p>
+              <p><strong>Puntos usados en canjes:</strong> {medicamento.puntosUsados || 0}</p>
+              <p><strong>Puntos disponibles:</strong> {medicamento.puntosDisponibles || 0}</p>
             </div>
           ))
         ) : (
