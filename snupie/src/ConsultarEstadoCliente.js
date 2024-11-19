@@ -19,6 +19,15 @@ function ConsultarEstadoCliente() {
         puntosUsados: 40,
         puntosDisponibles: 60,
       },
+      {
+        id: 3,
+        nombre: "Amoxicilina",
+        urlImagen: "https://via.placeholder.com/150",
+        descripcion: "Antibiótico de amplio espectro.",
+        puntosAcumulados: 120,
+        puntosUsados: 50,
+        puntosDisponibles: 70,
+      },
     ],
     2: [
       {
@@ -42,6 +51,12 @@ function ConsultarEstadoCliente() {
     setMedicamentos(medicamentosPorUsuario[userId] || []);
   };
 
+  // Calcular datos globales
+  const totalMedicamentos = medicamentos.length;
+  const totalPuntosAcumulados = medicamentos.reduce((sum, med) => sum + med.puntosAcumulados, 0);
+  const totalPuntosUsados = medicamentos.reduce((sum, med) => sum + med.puntosUsados, 0);
+  const totalPuntosDisponibles = medicamentos.reduce((sum, med) => sum + med.puntosDisponibles, 0);
+
   return (
     <div className="status-container">
       <h1 className="title">Snupie</h1>
@@ -59,6 +74,17 @@ function ConsultarEstadoCliente() {
           ))}
         </select>
       </div>
+
+      {selectedUser && (
+        <div className="global-stats">
+          <h3>Resumen Global</h3>
+          <p><strong>Total de medicamentos adquiridos y aprobados:</strong> {totalMedicamentos}</p>
+          <p><strong>Cantidad de puntos globales acumulados:</strong> {totalPuntosAcumulados}</p>
+          <p><strong>Cantidad de puntos globales usados en canjes:</strong> {totalPuntosUsados}</p>
+          <p><strong>Cantidad de puntos globales disponibles:</strong> {totalPuntosDisponibles}</p>
+        </div>
+      )}
+
       <div className="medication-list">
         {medicamentos.length > 0 ? (
           medicamentos.map((medicamento) => (
