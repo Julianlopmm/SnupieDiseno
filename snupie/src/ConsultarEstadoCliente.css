@@ -1,0 +1,72 @@
+.status-container {
+    background-color: #f0f0f0; /* Fondo gris claro */
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .title {
+    font-size: 48px;
+    text-align: center;
+    color: #3e3b5b; /* Color morado oscuro */
+  }
+  
+  .subtitle {
+    text-align: center;
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .user-selector {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  label {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .medication-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .medication-card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .med-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .medication-name {
+    font-size: 20px;
+    color: #6a5acd; /* Morado */
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  

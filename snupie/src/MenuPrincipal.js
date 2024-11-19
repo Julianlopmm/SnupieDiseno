@@ -15,6 +15,7 @@ function MenuPrincipal() {
   const isSolicitudDisabled = role !== 1 && role !== 3;
   const isMedicamentoDisabled = role !== 1;
   const isRevisarDisabled = role !== 1 && role !== 2;
+  const isConsultarEstadoDisabled = role !== 1 && role !== 3;
 
   return (
     <div className="main-menu-container">
@@ -41,6 +42,13 @@ function MenuPrincipal() {
           disabled={isRevisarDisabled}
         >
           Revisar Solicitudes
+        </button>
+        <button 
+          className="menu-button" 
+          onClick={() => handleNavigation('/consultarEstadoCliente')} 
+          disabled={isConsultarEstadoDisabled}
+        >
+          Consultar Estado Cliente
         </button>
       </div>
     </div>
