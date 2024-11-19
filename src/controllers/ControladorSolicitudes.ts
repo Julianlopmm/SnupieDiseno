@@ -104,22 +104,6 @@ export class ControladorSolicitudes {
         return savedSolicitud;
     }
 
-    // Método para actualizar una solicitud existente
-    // async actualizarSolicitud(id: number, updatedSolicitud: Solicitud) {
-    //     const index = this.solicitudes.findIndex(solicitud => solicitud.id === id);
-    //     if (index === -1) {
-    //         throw new Error('Solicitud no encontrada');
-    //     }
-
-    //     const solicitudToUpdate = this.solicitudes[index];
-    //     const mergedSolicitud = this.dataSource.manager.merge(Solicitud, solicitudToUpdate, updatedSolicitud);
-    //     const savedSolicitud = await this.dataSource.manager.save(mergedSolicitud);
-
-    //     this.solicitudes[index] = savedSolicitud; // Actualiza la solicitud en memoria
-    //     return savedSolicitud;
-    // }
-
-    // Método para aceptar una solicitud
 
     async aceptarSolicitud(idSolicitud: number) {
         const solicitud = await this.obtenerSolicitudPorId(idSolicitud);
@@ -137,14 +121,27 @@ export class ControladorSolicitudes {
     
         let puntosMedicamento = await this.dataSource.manager.findOne(Punto, {where: {medicamento: solicitud.medicamento, usuario: solicitud.usuario}});
         let medicamento = await this.dataSource.manager.findOne(Medicamento, {where: {id: solicitud.medicamento.id}});
+        if (puntosMedicamento.puntosCanjeados === undefined ) {
+            puntosMedicamento.puntosCanjeados = 0; // Asignar un valor predeterminado
+        }
+        if (puntosMedicamento.puntosDisponibles === undefined) {
+            puntosMedicamento.puntosDisponibles = 0; // Asignar un valor predeterminado
+        }
+        if (puntosMedicamento.puntosAcumulados === undefined) {
+            puntosMedicamento.puntosAcumulados = 0; // Asignar un valor predeterminado
+        }
+        
         if (!puntosMedicamento) {
             let punto = new Punto();
-            punto.cantidad = solicitud.cantidad * medicamento.puntosPorCompra;
+            punto.puntosDisponibles = solicitud.cantidad * medicamento.puntosPorCompra;
+            punto.puntosAcumulados = solicitud.cantidad * medicamento.puntosPorCompra;
+            punto.puntosCanjeados = 0;
             punto.medicamento = solicitud.medicamento;
             punto.usuario = solicitud.usuario;
             await this.dataSource.manager.save(punto);
         } else {
-            puntosMedicamento.cantidad += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
+            puntosMedicamento.puntosDisponibles += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
+            puntosMedicamento.puntosAcumulados += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
             await this.dataSource.manager.save(puntosMedicamento);
         }
     
@@ -170,6 +167,36 @@ export class ControladorSolicitudes {
             relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
         });
         return solicitudesPendientes;
+    }
+
+    async obtenerSolicitudesUsuarioAprobadas(_usuario: Usuario) {
+        const estadoAceptado = await this.dataSource.manager.findOne(Estado, { where: { nombre: 'Aceptada' } });
+        const solicitudesAprobadas = await this.dataSource.manager.find(Solicitud, {
+            where: { estadoSolicitud: estadoAceptado, usuario: _usuario },
+            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
+        });
+        return solicitudesAprobadas;
+        
+    }
+
+    async obtenerMedicamentosSegunSolicitudesUsuario(idUsuario: number) {
+        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
+        const medicamentos = await this.dataSource.manager.find(Medicamento, { relations: ['presentacion'] });
+        const solicitudes = await this.obtenerSolicitudesUsuarioAprobadas(usuario); 
+        const medicamentosUsuario = medicamentos.filter(medicamento => solicitudes.some(solicitud => solicitud.medicamento.id === medicamento.id));
+        const puntos = await this.dataSource.manager.find(Punto, {where: {usuario: usuario}, relations: ['medicamento']});
+
+        const medicamentosUsuarioConPuntos = medicamentosUsuario.map(medicamento => {
+            const punto = puntos.find(punto => punto.medicamento.id === medicamento.id);
+            return {
+                ...medicamento,
+                puntosDisponibles: punto?.puntosDisponibles || 0,
+                puntosAcumulados: punto?.puntosAcumulados || 0,
+                puntosCanjeados: punto?.puntosCanjeados || 0
+            }
+        });
+        
+        return medicamentosUsuarioConPuntos; 
     }
     
 

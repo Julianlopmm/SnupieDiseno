@@ -182,6 +182,15 @@ AppDataSource.initialize()
       }
     });
 
+    app.get('/medicamentosUsuario/:id', async (req, res) => {
+      try {
+        const medicamentos = await controladorSolicitudes.obtenerMedicamentosSegunSolicitudesUsuario(parseInt(req.params.id));
+        res.json(medicamentos);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener medicamentos por usuario", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0

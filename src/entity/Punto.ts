@@ -8,8 +8,14 @@ export class Punto {
     id: number;
 
     @Column()
-    cantidad: number;
+    puntosAcumulados: number;
 
+    @Column()
+    puntosDisponibles: number;
+
+    @Column()
+    puntosCanjeados: number;
+    
     @ManyToOne(() => Medicamento)
     medicamento: Medicamento;
 
