@@ -8,8 +8,6 @@ interface FarmaciaRequest {
     email: string;
 }
 
-
-
 export class ControladorFarmacias {
     private ListaSingleton = ListaSingleton.getInstance(); // Obtén la instancia única
 
