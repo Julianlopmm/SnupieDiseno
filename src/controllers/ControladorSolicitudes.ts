@@ -121,16 +121,6 @@ export class ControladorSolicitudes {
     
         let puntosMedicamento = await this.dataSource.manager.findOne(Punto, {where: {medicamento: solicitud.medicamento, usuario: solicitud.usuario}});
         let medicamento = await this.dataSource.manager.findOne(Medicamento, {where: {id: solicitud.medicamento.id}});
-        if (puntosMedicamento.puntosCanjeados === undefined ) {
-            puntosMedicamento.puntosCanjeados = 0; // Asignar un valor predeterminado
-        }
-        if (puntosMedicamento.puntosDisponibles === undefined) {
-            puntosMedicamento.puntosDisponibles = 0; // Asignar un valor predeterminado
-        }
-        if (puntosMedicamento.puntosAcumulados === undefined) {
-            puntosMedicamento.puntosAcumulados = 0; // Asignar un valor predeterminado
-        }
-        
         if (!puntosMedicamento) {
             let punto = new Punto();
             punto.puntosDisponibles = solicitud.cantidad * medicamento.puntosPorCompra;
