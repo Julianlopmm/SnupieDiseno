@@ -3,6 +3,8 @@ import { Rol } from "../entity/Rol";
 import { AppDataSource } from "../data-source";
 import { ListaSingleton } from "../ListaSingleton";
 import { Punto } from "../entity/Punto";
+import { Farmacia } from "../entity/Farmacia";
+import { FarmaciaUsuarioAdapter } from "../adapter/FarmaciaUsuarioAdapter";
 
 interface UsuarioRequest {
     nombre: string;
@@ -30,7 +32,8 @@ export class ControladorUsuario {
         const rolesPredeterminados = [
             { nombre: "Admin" },
             { nombre: "Operativo" },
-            { nombre: "Cliente" }
+            { nombre: "Cliente" },
+            { nombre: "Farmacia" },
         ];
 
         for (const rolData of rolesPredeterminados) {
@@ -116,12 +119,27 @@ export class ControladorUsuario {
     
 
     async login(req: { email: string, contrasena: string }) {
-        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { email: req.email, contrasena: req.contrasena }, relations: ["rol"] });
-        if (!usuario) {
+        // Buscar primero en la tabla Usuario
+        const usuario = await this.dataSource.manager.findOne(Usuario, {
+            where: { email: req.email, contrasena: req.contrasena },
+            relations: ["rol"],
+        });
+
+        if (usuario) {
+            // Retornar el usuario directamente si es encontrado
+            return usuario;
+        }
+        // Si no se encontró como Usuario, buscar en la tabla Farmacia
+        const farmacia = this.ListaSingleton.getFarmaciaUsuarios().find(farmacia => farmacia.email === req.email && farmacia.contrasena === req.contrasena);
+
+        if (!farmacia) {
+            // Si no se encuentra en ninguna tabla, lanzar un error
             throw new Error("User not found");
         }
-        return usuario;
+        // Retornar la farmacia adaptada como un usuario
+        return farmacia;
     }
+
 
     async obtenerPuntosPorUsuario(id: number) {
         const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id } });

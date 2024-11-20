@@ -1,6 +1,9 @@
 import { Farmacia } from '../entity/Farmacia';
 import { AppDataSource } from '../data-source';
 import { ListaSingleton } from '../ListaSingleton';
+import { FarmaciaUsuarioAdapter } from '../adapter/FarmaciaUsuarioAdapter';
+import { Rol } from '../entity/Rol';
+import { Usuario } from '../entity/Usuario';
 interface FarmaciaRequest {
     nombre: string;
     direccion: string;
@@ -24,6 +27,21 @@ export class ControladorFarmacias {
     // Método para obtener todas las farmacias desde la base de datos
     async actualizarFarmacias() {
         const farmacias = await this.dataSource.manager.find(Farmacia);
+        const rol = await this.dataSource.manager.findOne(Rol, { where: { nombre: 'Farmacia' } });
+        const contrasena = '1234'; // Contraseña predeterminada para todas las farmacias
+        for (const farmacia of farmacias) {
+            const usuarioNuevo = new Usuario();
+            usuarioNuevo.nombre = farmacia.nombre;
+            usuarioNuevo.email = "example@gmail.com";
+            usuarioNuevo.contrasena = "password";
+            usuarioNuevo.rol = rol;
+            await this.dataSource.manager.save(usuarioNuevo);
+            const user = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
+            const farmaciaUsuarioAdapter = new FarmaciaUsuarioAdapter(farmacia, rol, contrasena, user.id);
+
+            this.ListaSingleton.agregarFarmaciaUsuario(farmaciaUsuarioAdapter);
+        }
+
         this.ListaSingleton.setFarmacias(farmacias); // Usa la instancia global
         return farmacias;
     }
@@ -56,6 +74,15 @@ export class ControladorFarmacias {
         console.log(`Farmacia creada: ${farmacia.nombre}`);
         return farmacia;
 
+    }
+
+    async setRoles(){
+        const rol = await this.dataSource.manager.findOne(Rol, { where: { nombre: 'Farmacia' } });
+        const farmaciaUsuarios = this.ListaSingleton.getFarmaciaUsuarios();
+        for (const farmaciaUsuario of farmaciaUsuarios){
+            farmaciaUsuario.rol = rol;
+        }
+        return farmaciaUsuarios;
     }
 
 }

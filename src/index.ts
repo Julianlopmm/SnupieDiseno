@@ -210,8 +210,16 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
       }
     });
-    
 
+    app.get("/setRoles", async (req, res) => {
+      try {
+        const farmaciaUsuarios = await controladorFarmacias.setRoles();
+        res.json(farmaciaUsuarios);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener farmacias", error: error.message });
+      } 
+    
+    });
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0
@@ -219,3 +227,4 @@ AppDataSource.initialize()
     });
   })
   .catch((error) => console.log("Error al iniciar la base de datos:", error));
+

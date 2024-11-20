@@ -33,4 +33,7 @@ export class Solicitud {
     @Column()
     urlImagen: string;
 
+    @Column()
+    numeroCanje: number;
+
 }    
