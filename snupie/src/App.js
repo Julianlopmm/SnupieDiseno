@@ -7,7 +7,7 @@ import RegistrarSolicitud from './RegistrarSolicitud'; // Importa RegistrarSolic
 import AsignarMedicamentos from './AsignarMedicamentos';
 import ReviewRequest from './ReviewRequests'; // Importa ReviewRequest
 import ConsultarEstadoCliente from './ConsultarEstadoCliente';
-import ConsultaCanjesCliente from './ConsultaCanjesClientes';
+import DetalleMedicamento from './DetalleMedicamento';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/asignarMedicamento" element={<AsignarMedicamentos />} />
         <Route path="/revisarSolicitudes" element={<ReviewRequest />} />
         <Route path="/consultarEstadoCliente" element={<ConsultarEstadoCliente/>} />
-        <Route path="/consultaCanjesCliente" element={<ConsultaCanjesCliente/>} />
+        <Route path="/detalle-medicamento" element={<DetalleMedicamento />} />
       </Routes>
     </Router>
   );

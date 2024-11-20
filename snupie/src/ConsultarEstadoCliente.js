@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ConsultarEstadoCliente.css';
+import { useNavigate } from 'react-router-dom';
 
 function ConsultarEstadoCliente() {
   const [usuarios, setUsuarios] = useState([]);
@@ -13,7 +14,6 @@ function ConsultarEstadoCliente() {
         const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
         if (!response.ok) {
           throw new Error('Error al obtener la lista de usuarios');
-          // xd
         }
         const data = await response.json();
         setUsuarios(data);
@@ -24,6 +24,14 @@ function ConsultarEstadoCliente() {
 
     fetchUsuarios();
   }, []);
+
+
+  const navigate = useNavigate();
+
+// Función para manejar el clic en "Ver detalle"
+  const handleVerDetalle = (medicamento) => {
+    navigate('/detalle-medicamento', { state: { medicamento } });
+  };
 
   // Obtener los medicamentos del usuario seleccionado
   const fetchMedicamentosUsuario = async (userId) => {
@@ -54,6 +62,9 @@ function ConsultarEstadoCliente() {
     setSelectedUser(userId);
     fetchMedicamentosUsuario(userId); // Cargar medicamentos del usuario seleccionado
   };
+
+
+
 
   return (
     <div className="status-container">
@@ -97,6 +108,12 @@ function ConsultarEstadoCliente() {
               <p><strong>Puntos acumulados:</strong> {medicamento.puntosAcumulados || 0}</p>
               <p><strong>Puntos usados en canjes:</strong> {medicamento.puntosUsados || 0}</p>
               <p><strong>Puntos disponibles:</strong> {medicamento.puntosDisponibles || 0}</p>
+              <button
+                className="detail-button"
+                onClick={() => handleVerDetalle(medicamento)}
+              >
+                Ver detalle
+              </button>
             </div>
           ))
         ) : (
