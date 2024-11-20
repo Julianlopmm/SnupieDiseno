@@ -13,6 +13,7 @@ function ConsultarEstadoCliente() {
         const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
         if (!response.ok) {
           throw new Error('Error al obtener la lista de usuarios');
+          // xd
         }
         const data = await response.json();
         setUsuarios(data);

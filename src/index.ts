@@ -187,7 +187,7 @@ AppDataSource.initialize()
         const medicamentos = await controladorSolicitudes.obtenerMedicamentosSegunSolicitudesUsuario(parseInt(req.params.id));
         res.json(medicamentos);
       } catch (error) {
-        res.status(500).json({ message: "Error al obtener medicamentos por usuario", error: error.message });
+        res.status(500).json({ message: "Error al obtener medicamentos por usuario", error: error.message, stack: error.stack });
       }
     });
 
