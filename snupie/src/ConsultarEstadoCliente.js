@@ -32,7 +32,16 @@ function ConsultarEstadoCliente() {
         throw new Error('Error al obtener los medicamentos del usuario');
       }
       const data = await response.json();
-      setMedicamentos(data);
+
+      // Ordenar medicamentos por puntos disponibles y descripción
+      const sortedData = data.sort((a, b) => {
+        if (a.puntosDisponibles === b.puntosDisponibles) {
+          return a.descripcion.localeCompare(b.descripcion);
+        }
+        return a.puntosDisponibles - b.puntosDisponibles;
+      });
+
+      setMedicamentos(sortedData);
     } catch (error) {
       console.error('Error al obtener medicamentos del usuario:', error);
     }
