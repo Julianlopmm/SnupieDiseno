@@ -195,7 +195,7 @@ AppDataSource.initialize()
 
 
 
-    app.get("/solicitudes/:id", async (req, res) => {
+    app.get("/solicitudesCriterio/:id", async (req, res) => {
       try {
         const { id } = req.params;
         const { criterio } = req.query; // 'ascendente' o 'descendente'
