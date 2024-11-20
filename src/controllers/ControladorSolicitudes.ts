@@ -5,6 +5,9 @@ import { Medicamento } from "../entity/Medicamento";
 import { Farmacia } from "../entity/Farmacia";
 import { Usuario } from "../entity/Usuario";
 import { Punto } from "../entity/Punto";
+import { ContextoOrden } from "../Strategy/ContextoOrden";
+import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
+import { OrdenCronologicoDescendente } from "../Strategy/OrdenCronologicoDescendente";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -188,6 +191,28 @@ export class ControladorSolicitudes {
         
         return medicamentosUsuarioConPuntos; 
     }
+
+
+    async obtenerSolicitudesPorCriterio(idUsuario: number, criterio: string): Promise<any[]> {
+        // Obtener el usuario
+        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
+        if (!usuario) {
+          throw new Error("Usuario no encontrado");
+        }
+    
+        // Obtener las solicitudes aprobadas del usuario
+        const solicitudes = await this.obtenerSolicitudesUsuarioAprobadas(usuario);
+    
+        // Crear el contexto con la estrategia correcta
+        const contexto = new ContextoOrden(
+          criterio === "ascendente" ? new OrdenCronologicoAscendente() : new OrdenCronologicoDescendente()
+        );
+    
+        // Ordenar las solicitudes usando la estrategia seleccionada
+        return contexto.ordenarSolicitudes(solicitudes);
+      }
+    
+    
     
 
 }

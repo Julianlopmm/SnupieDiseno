@@ -1,0 +1,64 @@
+.detalle-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .medication-detail {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .med-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+  }
+  
+  .redeem-button {
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .redeem-button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+  
+  .records-list {
+    margin-top: 20px;
+  }
+  
+  .record-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .back-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  

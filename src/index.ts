@@ -4,6 +4,8 @@ import { ControladorSolicitudes } from "./controllers/ControladorSolicitudes";
 import { ControladorUsuario } from "./controllers/ControladorUsuario";
 import { ControladorFarmacias } from "./controllers/ControladorFarmacias";
 import { ListaSingleton } from "./ListaSingleton";
+import { ContextoOrden } from "./Strategy/ContextoOrden";
+
 import express from 'express';
 import cors from 'cors'; 
 
@@ -190,6 +192,25 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener medicamentos por usuario", error: error.message, stack: error.stack });
       }
     });
+
+
+
+    app.get("/solicitudes/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { criterio } = req.query; // 'ascendente' o 'descendente'
+    
+        const solicitudes = await controladorSolicitudes.obtenerSolicitudesPorCriterio(
+          parseInt(id, 10),
+          criterio as string
+        );
+    
+        res.json(solicitudes);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
+      }
+    });
+    
 
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
