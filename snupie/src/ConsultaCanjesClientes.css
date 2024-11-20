@@ -1,0 +1,72 @@
+.exchange-container {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: auto;
+  }
+  
+  .title {
+    font-size: 48px;
+    text-align: center;
+    color: #4a4a8d;
+  }
+  
+  .subtitle {
+    font-size: 24px;
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .user-selector {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  label {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .exchange-stats {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .exchange-stats h3 {
+    font-size: 20px;
+    color: #4a4a8d;
+    margin-bottom: 10px;
+  }
+  
+  .exchange-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .exchange-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .exchange-card p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
