@@ -50,6 +50,13 @@ function MenuPrincipal() {
         >
           Consultar Estado Cliente
         </button>
+        <button
+          className="menu-button"
+          onClick={() => handleNavigation('/consultaCanjesCliente')}
+        >
+          Consultar Canjes Cliente
+        </button>
+
       </div>
     </div>
   );
