@@ -24,6 +24,6 @@ export class Canjes {
     @ManyToOne(() => Farmacia)
     farmacia: Farmacia;
 
-    @OneToMany(() => Solicitud, solicitud => solicitud.canje, {nullable: true})
+    @OneToMany(() => Solicitud, (solicitud) => solicitud.canje, {nullable: true})
     solicitudes: Solicitud[];
 }

@@ -3,6 +3,7 @@ import { ControladorMedicamentos } from "./controllers/ControladorMedicamentos";
 import { ControladorSolicitudes } from "./controllers/ControladorSolicitudes";
 import { ControladorUsuario } from "./controllers/ControladorUsuario";
 import { ControladorFarmacias } from "./controllers/ControladorFarmacias";
+import { ControladorCanjes } from "./controllers/ControladorCanjes";
 import { ListaSingleton } from "./ListaSingleton";
 import { ContextoOrden } from "./Strategy/ContextoOrden";
 
@@ -15,6 +16,7 @@ AppDataSource.initialize()
     const controladorUsuario = new ControladorUsuario();
     const controladorMedicamentos = new ControladorMedicamentos();
     const controladorSolicitudes = new ControladorSolicitudes();
+    const controladorCanjes = new ControladorCanjes();
 
     const app = express();
     app.use(express.json());
@@ -220,6 +222,25 @@ AppDataSource.initialize()
       } 
     
     });
+
+    app.get("/canjes", async (req, res) => {
+      try {
+        const canjes = await controladorCanjes.getCanjes();
+        res.json(canjes);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener canjes", error: error.message });
+      }
+    });
+
+    app.post("/crearCanje", async (req, res) => {
+      try {
+        const canje = await controladorCanjes.crearCanje(req.body);
+        res.json(canje);
+      } catch (error) {
+        res.status(500).json({ message: "Error al crear canje", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0
