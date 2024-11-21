@@ -216,34 +216,6 @@ export class ControladorSolicitudes {
 
 
 
-    async obtenerSolicitudesPorCriterioYUsuario(
-        idUsuario: number,
-        idMedicamento: number,
-        criterio: string
-      ): Promise<any[]> {
-        // Obtener el usuario
-        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
-        if (!usuario) {
-          throw new Error("Usuario no encontrado");
-        }
-      
-        // Filtrar solicitudes aprobadas del usuario y medicamento específico
-        const solicitudes = await this.dataSource.manager.find(Solicitud, {
-          where: { usuario: usuario, medicamento: { id: idMedicamento }, estadoSolicitud: { nombre: "Aceptada" } },
-          relations: ["medicamento", "farmacia", "canje"],
-        });
-      
-        // Crear el contexto con la estrategia correcta
-        const contexto = new ContextoOrden(
-          criterio === "ascendente"
-            ? new OrdenCronologicoAscendente()
-            : new FiltrarSolicitudesConCanje()
-        );
-      
-        // Ordenar o filtrar las solicitudes según la estrategia
-        return contexto.ordenarSolicitudes(solicitudes);
-      }
-      
-    
+
 
 }
