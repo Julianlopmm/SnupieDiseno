@@ -30,16 +30,19 @@ export class ControladorFarmacias {
         const rol = await this.dataSource.manager.findOne(Rol, { where: { nombre: 'Farmacia' } });
         const contrasena = '1234'; // Contraseña predeterminada para todas las farmacias
         for (const farmacia of farmacias) {
-            const usuarioNuevo = new Usuario();
-            usuarioNuevo.nombre = farmacia.nombre;
-            usuarioNuevo.email = "example@gmail.com";
-            usuarioNuevo.contrasena = "password";
-            usuarioNuevo.rol = rol;
-            await this.dataSource.manager.save(usuarioNuevo);
-            const user = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
-            const farmaciaUsuarioAdapter = new FarmaciaUsuarioAdapter(farmacia, rol, contrasena, user.id);
+            const usuarioExistente = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
+            if(!usuarioExistente){
+                const usuarioNuevo = new Usuario();
+                usuarioNuevo.nombre = farmacia.nombre;
+                usuarioNuevo.email = "example@gmail.com";
+                usuarioNuevo.contrasena = "password";
+                usuarioNuevo.rol = rol;
+                await this.dataSource.manager.save(usuarioNuevo);
+                const user = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
+                const farmaciaUsuarioAdapter = new FarmaciaUsuarioAdapter(farmacia, rol, contrasena, user.id);
 
-            this.ListaSingleton.agregarFarmaciaUsuario(farmaciaUsuarioAdapter);
+                this.ListaSingleton.agregarFarmaciaUsuario(farmaciaUsuarioAdapter);
+            }
         }
 
         this.ListaSingleton.setFarmacias(farmacias); // Usa la instancia global

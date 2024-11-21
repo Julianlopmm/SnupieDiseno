@@ -1,7 +1,11 @@
 import { IEstrategiaOrden } from "./IEstrategiaOrden";
+import { CanjeVisitor } from "../Visitor/CanjeVisitor";
 
 export class FiltrarSolicitudesConCanje implements IEstrategiaOrden {
   ordenar(solicitudes: any[]): any[] {
-    return solicitudes.filter((solicitud) => solicitud.canje !== null);
+    const visitor = new CanjeVisitor();
+    return solicitudes.filter((solicitud) => visitor.visitSolicitud(solicitud));
+    
+    
   }
 }

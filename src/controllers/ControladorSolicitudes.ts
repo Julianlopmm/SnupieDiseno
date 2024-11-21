@@ -8,6 +8,7 @@ import { Punto } from "../entity/Punto";
 import { ContextoOrden } from "../Strategy/ContextoOrden";
 import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
 import { FiltrarSolicitudesConCanje } from "../Strategy/FiltrarSolicitudesConCanje";
+import { CandidatoVisitor } from "../Visitor/CandidatoVisitor";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -162,14 +163,31 @@ export class ControladorSolicitudes {
         return solicitudesPendientes;
     }
 
-    async obtenerSolicitudesUsuarioAprobadas(_usuario: Usuario) {
-        const estadoAceptado = await this.dataSource.manager.findOne(Estado, { where: { nombre: 'Aceptada' } });
-        const solicitudesAprobadas = await this.dataSource.manager.find(Solicitud, {
-            where: { estadoSolicitud: estadoAceptado, usuario: _usuario },
-            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
+    async obtenerSolicitudesUsuarioAprobadas(_usuario: Usuario): Promise<Solicitud[]> {
+        // Obtener todas las solicitudes con sus relaciones necesarias
+        const solicitudes = await this.dataSource.manager.find(Solicitud, {
+            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario'],
         });
+    
+        // Crear una instancia del CandidatoVisitor
+        const candidatoVisitor = new CandidatoVisitor();
+    
+        const solicitudesAprobadas: Solicitud[] = [];
+    
+        for (const solicitud of solicitudes) {
+            // Usar el visitante para determinar si la solicitud es aceptada
+            console.log( "solicitudes" , solicitud);
+            const solicitudAceptada = await candidatoVisitor.visitSolicitud(solicitud);
+            console.log("solicitud aceptada", solicitudAceptada);
+            // Si es aceptada y pertenece al usuario dado, la agregamos al resultado
+            if (solicitudAceptada && solicitudAceptada.usuario.id === _usuario.id) {
+                solicitudesAprobadas.push(solicitudAceptada);
+            }
+        }
+
+        console.log("solicitudes aprobadas", solicitudesAprobadas);
+    
         return solicitudesAprobadas;
-        
     }
 
     async obtenerMedicamentosSegunSolicitudesUsuario(idUsuario: number) {
@@ -214,6 +232,21 @@ export class ControladorSolicitudes {
         return contexto.ordenarSolicitudes(solicitudes);
     }
 
+
+    async visitarSolicitud(idSolicitud: number) {
+        const solicitud = await this.obtenerSolicitudPorId(idSolicitud);
+        if (!solicitud) {
+            throw new Error('Solicitud no encontrada');
+        }
+    
+        // Crear una instancia del CandidatoVisitor
+        const candidatoVisitor = new CandidatoVisitor();
+    
+        // Usar el visitante para determinar si la solicitud es aceptada
+        const solicitudAceptada = await candidatoVisitor.visitSolicitud(solicitud);
+    
+        return solicitudAceptada;
+    }
 
 
 

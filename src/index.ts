@@ -6,6 +6,7 @@ import { ControladorFarmacias } from "./controllers/ControladorFarmacias";
 import { ControladorCanjes } from "./controllers/ControladorCanjes";
 import { ListaSingleton } from "./ListaSingleton";
 import { ContextoOrden } from "./Strategy/ContextoOrden";
+import { Usuario } from "./entity/Usuario";
 
 import express from 'express';
 import cors from 'cors'; 
@@ -195,8 +196,6 @@ AppDataSource.initialize()
       }
     });
 
-
-
     app.get("/solicitudesCriterio/:id", async (req, res) => {
       try {
         const { id } = req.params;
@@ -222,6 +221,26 @@ AppDataSource.initialize()
       } 
     
     });
+
+    app.get("/solicitudesAprobadas/:id", async (req, res) => {
+      try {
+        const usuario = await controladorUsuario.obtenerUsuarioPorId(parseInt(req.params.id));
+        const solicitudes = await controladorSolicitudes.obtenerSolicitudesUsuarioAprobadas(usuario);
+        res.json(solicitudes);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener solicitudes aprobadas", error: error.message });
+      }
+    });
+
+    app.get('/visitarSolicitud/:id', async (req, res) => {
+      try {
+        const solicitud = await controladorSolicitudes.visitarSolicitud(parseInt(req.params.id));
+        res.json(solicitud);
+      } catch (error) {
+        res.status(500).json({ message: "Error al visitar solicitud", error: error.message });
+      }
+    });
+
 
     app.get("/canjes", async (req, res) => {
       try {

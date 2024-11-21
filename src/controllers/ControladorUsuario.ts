@@ -5,6 +5,7 @@ import { ListaSingleton } from "../ListaSingleton";
 import { Punto } from "../entity/Punto";
 import { Farmacia } from "../entity/Farmacia";
 import { FarmaciaUsuarioAdapter } from "../adapter/FarmaciaUsuarioAdapter";
+import { Not } from "typeorm"; // Importamos el helper Not
 
 interface UsuarioRequest {
     nombre: string;
@@ -52,7 +53,7 @@ export class ControladorUsuario {
     
 
     async actualizarUsuarios() {
-        const usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] });
+        const usuarios = await this.dataSource.manager.find(Usuario, { relations: ["rol"] , where: { email: Not("example@gmail.com") }});
         this.ListaSingleton.setUsuarios(usuarios); // Usa la instancia global
         return usuarios;
     }
