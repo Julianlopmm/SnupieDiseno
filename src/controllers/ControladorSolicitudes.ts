@@ -8,6 +8,7 @@ import { Punto } from "../entity/Punto";
 import { ContextoOrden } from "../Strategy/ContextoOrden";
 import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
 import { OrdenCronologicoDescendente } from "../Strategy/OrdenCronologicoDescendente";
+import { CandidatoVisitor } from "../Visitor/CandidatoVisitor";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -164,10 +165,16 @@ export class ControladorSolicitudes {
 
     async obtenerSolicitudesUsuarioAprobadas(_usuario: Usuario) {
         const estadoAceptado = await this.dataSource.manager.findOne(Estado, { where: { nombre: 'Aceptada' } });
-        const solicitudesAprobadas = await this.dataSource.manager.find(Solicitud, {
-            where: { estadoSolicitud: estadoAceptado, usuario: _usuario },
-            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
-        });
+        const solicitudes = await this.dataSource.manager.find(Solicitud);
+        const candidatoVisitor = new CandidatoVisitor();
+        let solicitudesAprobadas = [];
+        for (const solicitud of solicitudes) {
+            const solicitudAceptada = solicitud.accept(candidatoVisitor);
+            if (solicitudAceptada) {
+                solicitudesAprobadas.push(solicitudAceptada);
+            }
+        }
+
         return solicitudesAprobadas;
         
     }

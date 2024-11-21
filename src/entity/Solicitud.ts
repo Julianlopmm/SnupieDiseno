@@ -4,9 +4,16 @@ import { Usuario } from './Usuario';
 import { Medicamento } from './Medicamento';
 import { Farmacia } from './Farmacia';
 import { Canjes } from './Canjes';
+import { Visitable } from '../Visitor/Visitable';
+import { Visitor } from '../Visitor/Visitor';
 
 @Entity()
-export class Solicitud {
+export class Solicitud implements Visitable{
+
+    accept(visitor: Visitor): any {
+        visitor.visitSolicitud(this);
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
