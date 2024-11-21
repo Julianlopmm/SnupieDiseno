@@ -15,6 +15,9 @@ export class Canjes {
     @ManyToOne(() => Medicamento)
     medicamento: Medicamento;
 
+    @Column()
+    cantidad: number;
+
     @ManyToOne(() => Usuario)
     usuario: Usuario;
 

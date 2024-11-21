@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Estado } from './Estado';
 import { Usuario } from './Usuario';
 import { Medicamento } from './Medicamento';
 import { Farmacia } from './Farmacia';
+import { Canjes } from './Canjes';
 
 @Entity()
 export class Solicitud {
@@ -33,7 +34,7 @@ export class Solicitud {
     @Column()
     urlImagen: string;
 
-    @Column()
-    numeroCanje: number;
+    @ManyToOne(() => Canjes, (canje) => canje.solicitudes, { nullable: true })
+    canje: Canjes; 
 
 }    
