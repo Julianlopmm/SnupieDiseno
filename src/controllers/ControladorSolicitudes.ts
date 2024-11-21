@@ -7,8 +7,7 @@ import { Usuario } from "../entity/Usuario";
 import { Punto } from "../entity/Punto";
 import { ContextoOrden } from "../Strategy/ContextoOrden";
 import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
-import { OrdenCronologicoDescendente } from "../Strategy/OrdenCronologicoDescendente";
-import { CandidatoVisitor } from "../Visitor/CandidatoVisitor";
+import { FiltrarSolicitudesConCanje } from "../Strategy/FiltrarSolicitudesConCanje";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -165,16 +164,10 @@ export class ControladorSolicitudes {
 
     async obtenerSolicitudesUsuarioAprobadas(_usuario: Usuario) {
         const estadoAceptado = await this.dataSource.manager.findOne(Estado, { where: { nombre: 'Aceptada' } });
-        const solicitudes = await this.dataSource.manager.find(Solicitud);
-        const candidatoVisitor = new CandidatoVisitor();
-        let solicitudesAprobadas = [];
-        for (const solicitud of solicitudes) {
-            const solicitudAceptada = solicitud.accept(candidatoVisitor);
-            if (solicitudAceptada) {
-                solicitudesAprobadas.push(solicitudAceptada);
-            }
-        }
-
+        const solicitudesAprobadas = await this.dataSource.manager.find(Solicitud, {
+            where: { estadoSolicitud: estadoAceptado, usuario: _usuario },
+            relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario']
+        });
         return solicitudesAprobadas;
         
     }
@@ -204,22 +197,25 @@ export class ControladorSolicitudes {
         // Obtener el usuario
         const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
         if (!usuario) {
-          throw new Error("Usuario no encontrado");
+            throw new Error("Usuario no encontrado");
         }
     
-        // Obtener las solicitudes aprobadas del usuario
+        // Obtener las solicitudes aprobadas para el usuario específico
         const solicitudes = await this.obtenerSolicitudesUsuarioAprobadas(usuario);
     
         // Crear el contexto con la estrategia correcta
         const contexto = new ContextoOrden(
-          criterio === "ascendente" ? new OrdenCronologicoAscendente() : new OrdenCronologicoDescendente()
+            criterio === "ascendente"
+                ? new OrdenCronologicoAscendente()
+                : new FiltrarSolicitudesConCanje() // Estrategia para solicitudes con canje no vacío
         );
     
-        // Ordenar las solicitudes usando la estrategia seleccionada
+        // Ordenar o filtrar las solicitudes usando la estrategia seleccionada
         return contexto.ordenarSolicitudes(solicitudes);
-      }
-    
-    
-    
+    }
+
+
+
+
 
 }
