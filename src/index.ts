@@ -260,6 +260,16 @@ AppDataSource.initialize()
       }
     });
 
+    app.get("/canjes/:id", async (req, res) => {
+      try {
+        const canje = await controladorCanjes.obtenerCanjesPorUsuario(parseInt(req.params.id));
+        res.json(canje);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener canje", error: error.message });
+      }
+
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0

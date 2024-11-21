@@ -2,6 +2,8 @@ import { AppDataSource } from '../data-source';
 import { Canjes } from '../entity/Canjes';
 import { Farmacia } from '../entity/Farmacia';
 import { Medicamento } from '../entity/Medicamento';
+import { Punto } from '../entity/Punto';
+import { Solicitud } from '../entity/Solicitud';
 import { Usuario } from '../entity/Usuario';
 
 interface CanjesRequest {
@@ -34,32 +36,89 @@ export class ControladorCanjes {
     }
 
     async crearCanje(canjeData: CanjesRequest) {
-        // Validación de los datos requeridos
-        if (!canjeData.fecha || !canjeData.medicamento || !canjeData.usuario || !canjeData.farmacia) {
-            throw new Error('Datos inválidos: fecha, medicamento, usuario y farmacia son obligatorios.');
+        if (!canjeData.fecha || !canjeData.usuario || !canjeData.medicamento || !canjeData.farmacia) {
+            throw new Error('Datos inválidos: fecha, idUsuario, idMedicamento, y idFarmacia son obligatorios.');
         }
     
-        // Crea una instancia del canje
-        const canje = new Canjes();
-        canje.fecha = canjeData.fecha;
-        canje.medicamento = canjeData.medicamento;
-        canje.usuario = canjeData.usuario;
-        canje.farmacia = canjeData.farmacia;
-        canje.cantidad =canjeData.cantidad;
-    
         try {
-            // Guarda el canje en la base de datos
+            // Buscar las entidades relacionadas
+            const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: canjeData.usuario.id } });
+            if (!usuario) throw new Error('Usuario no encontrado');
+    
+            const medicamento = await this.dataSource.manager.findOne(Medicamento, { where: { id: canjeData.medicamento.id } });
+            if (!medicamento) throw new Error('Medicamento no encontrado');
+    
+            const farmacia = await this.dataSource.manager.findOne(Farmacia, { where: { id: canjeData.farmacia.id } });
+            if (!farmacia) throw new Error('Farmacia no encontrada');
+
+            const puntosNecesarios = canjeData.cantidad * medicamento.puntosParaCanje
+    
+            // Filtrar solicitudes no asociadas a un canje
+            const solicitudRepository = this.dataSource.manager.getRepository(Solicitud);
+            const solicitudesSinCanje = await solicitudRepository
+            .createQueryBuilder('solicitud')
+            .leftJoinAndSelect('solicitud.canje', 'canje')
+            .where('solicitud.canjeId IS NULL') // Asegúrate de que canjeId es el campo de la base de datos
+            .andWhere('solicitud.usuarioId = :usuarioId', { usuarioId: canjeData.usuario.id })
+            .andWhere('solicitud.medicamentoId = :medicamentoId', { medicamentoId: canjeData.medicamento.id })
+            .getMany();
+
+
+            const puntoRepository = this.dataSource.manager.getRepository(Punto);
+            const puntos = await puntoRepository.createQueryBuilder('punto')
+            .where('punto.usuarioId = :usuarioId', { usuarioId: canjeData.usuario.id })
+            .andWhere('punto.medicamentoId = :medicamentoId', { medicamentoId: canjeData.medicamento.id })
+            .getOne();
+
+            if (!puntos) throw new Error('Puntos no encontrados');
+
+            if (puntos.puntosDisponibles < puntosNecesarios){
+                throw new Error('Puntos insuficientes para realizar el canje.');
+            }
+    
+            // Seleccionar las solicitudes necesarias para cumplir con los puntos del canje
+            let puntosAcumulados = 0;
+            const solicitudesSeleccionadas = [];
+            for (const solicitud of solicitudesSinCanje) {
+                if (puntosAcumulados >= puntosNecesarios) break;
+                puntosAcumulados += (solicitud.cantidad * medicamento.puntosPorCompra);
+                solicitudesSeleccionadas.push(solicitud);
+            }
+    
+            // Crear el canje
+            const canje = new Canjes();
+            canje.fecha = canjeData.fecha;
+            canje.medicamento = canjeData.medicamento;
+            canje.usuario = canjeData.usuario;
+            canje.farmacia = canjeData.farmacia;
+            canje.cantidad = canjeData.cantidad;
+    
             const savedCanje = await this.dataSource.manager.save(canje);
-            this.canjes.push(savedCanje);
+    
+            // Asociar las solicitudes seleccionadas al canje
+            for (const solicitud of solicitudesSeleccionadas) {
+                solicitud.canje = savedCanje;
+            }
+            await solicitudRepository.save(solicitudesSeleccionadas);
+
+            // Actualizar puntos en la base
+            puntos.puntosDisponibles -= puntosNecesarios;
+            puntos.puntosCanjeados += puntosNecesarios;
+            await puntoRepository.save(puntos);
+            
+    
             return {
                 mensaje: 'Canje creado exitosamente',
-                canjeId: savedCanje.id,
-                canje: savedCanje
+                canje: savedCanje,
+                solicitudes: solicitudesSeleccionadas,
             };
         } catch (error) {
             console.error('Error al guardar el canje:', error);
-            throw new Error('Error al guardar el canje en la base de datos.');
+            throw new Error(error.message || 'Error al guardar el canje en la base de datos.');
         }
     }
-    
+
+    async obtenerCanjesPorUsuario(idUsuario: number) {
+        return await this.dataSource.manager.find(Canjes, { where: { usuario: { id: idUsuario } }, relations: ['medicamento', 'usuario', 'farmacia'] });
+    }
 }
