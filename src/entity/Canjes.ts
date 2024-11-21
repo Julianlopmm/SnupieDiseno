@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Usuario } from './Usuario';
 import { Medicamento } from './Medicamento';
 import { Farmacia } from './Farmacia';
+import { Solicitud } from './Solicitud';
 
 @Entity()
 export class Canjes {
@@ -9,7 +10,7 @@ export class Canjes {
     id: number;
 
     @Column()
-    fecha: string;
+    fecha: Date;
 
     @ManyToOne(() => Medicamento)
     medicamento: Medicamento;
@@ -19,4 +20,7 @@ export class Canjes {
 
     @ManyToOne(() => Farmacia)
     farmacia: Farmacia;
+
+    @OneToMany(() => Solicitud, solicitud => solicitud.canje)
+    solicitudes: Solicitud[];
 }

@@ -9,6 +9,7 @@ import { Estado } from "./entity/Estado";
 import { Medicamento } from "./entity/Medicamento";
 import { Presentacion } from "./entity/Presentacion";
 import { Punto } from "./entity/Punto";
+import { Canjes } from "./entity/Canjes";
 
 // Asegúrate de que estas variables de entorno estén configuradas en Google Cloud Run o en tu entorno local
 const instanceConnectionName = process.env.INSTANCE_CONNECTION_NAME!;
@@ -25,7 +26,7 @@ export const AppDataSource = new DataSource({
     database: dbName,
     synchronize: true,
     logging: false,
-    entities: [Usuario, Rol, Farmacia, Solicitud, Estado, Medicamento, Presentacion, Punto],
+    entities: [Usuario, Rol, Farmacia, Solicitud, Estado, Medicamento, Presentacion, Punto, Canjes],
     migrations: [],
     subscribers: [],
     extra: {
