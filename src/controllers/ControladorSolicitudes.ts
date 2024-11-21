@@ -176,17 +176,12 @@ export class ControladorSolicitudes {
     
         for (const solicitud of solicitudes) {
             // Usar el visitante para determinar si la solicitud es aceptada
-            console.log( "solicitudes" , solicitud);
             const solicitudAceptada = await candidatoVisitor.visitSolicitud(solicitud);
-            console.log("solicitud aceptada", solicitudAceptada);
             // Si es aceptada y pertenece al usuario dado, la agregamos al resultado
             if (solicitudAceptada && solicitudAceptada.usuario.id === _usuario.id) {
                 solicitudesAprobadas.push(solicitudAceptada);
             }
         }
-
-        console.log("solicitudes aprobadas", solicitudesAprobadas);
-    
         return solicitudesAprobadas;
     }
 

@@ -6,5 +6,6 @@ export class CanjeVisitor implements Visitor {
         if (solicitud.canje) {
             return solicitud;
         }
+        return null;
     }
 }
