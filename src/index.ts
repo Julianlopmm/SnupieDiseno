@@ -198,7 +198,7 @@ AppDataSource.initialize()
     app.get("/solicitudesCriterio/:id", async (req, res) => {
       try {
         const { id } = req.params;
-        const { criterio } = req.query; // 'ascendente' o 'descendente'
+        const { criterio } = req.query; 
     
         const solicitudes = await controladorSolicitudes.obtenerSolicitudesPorCriterio(
           parseInt(id, 10),

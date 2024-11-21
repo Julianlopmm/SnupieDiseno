@@ -7,7 +7,7 @@ import { Usuario } from "../entity/Usuario";
 import { Punto } from "../entity/Punto";
 import { ContextoOrden } from "../Strategy/ContextoOrden";
 import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
-import { OrdenCronologicoDescendente } from "../Strategy/OrdenCronologicoDescendente";
+import { FiltrarSolicitudesConCanje } from "../Strategy/FiltrarSolicitudesConCanje";
 
 interface SolicitudRequest{
     numSolicitud: string;
@@ -197,22 +197,53 @@ export class ControladorSolicitudes {
         // Obtener el usuario
         const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
         if (!usuario) {
-          throw new Error("Usuario no encontrado");
+            throw new Error("Usuario no encontrado");
         }
     
-        // Obtener las solicitudes aprobadas del usuario
+        // Obtener las solicitudes aprobadas para el usuario específico
         const solicitudes = await this.obtenerSolicitudesUsuarioAprobadas(usuario);
     
         // Crear el contexto con la estrategia correcta
         const contexto = new ContextoOrden(
-          criterio === "ascendente" ? new OrdenCronologicoAscendente() : new OrdenCronologicoDescendente()
+            criterio === "ascendente"
+                ? new OrdenCronologicoAscendente()
+                : new FiltrarSolicitudesConCanje() // Estrategia para solicitudes con canje no vacío
         );
     
-        // Ordenar las solicitudes usando la estrategia seleccionada
+        // Ordenar o filtrar las solicitudes usando la estrategia seleccionada
+        return contexto.ordenarSolicitudes(solicitudes);
+    }
+
+
+
+    async obtenerSolicitudesPorCriterioYUsuario(
+        idUsuario: number,
+        idMedicamento: number,
+        criterio: string
+      ): Promise<any[]> {
+        // Obtener el usuario
+        const usuario = await this.dataSource.manager.findOne(Usuario, { where: { id: idUsuario } });
+        if (!usuario) {
+          throw new Error("Usuario no encontrado");
+        }
+      
+        // Filtrar solicitudes aprobadas del usuario y medicamento específico
+        const solicitudes = await this.dataSource.manager.find(Solicitud, {
+          where: { usuario: usuario, medicamento: { id: idMedicamento }, estadoSolicitud: { nombre: "Aceptada" } },
+          relations: ["medicamento", "farmacia", "canje"],
+        });
+      
+        // Crear el contexto con la estrategia correcta
+        const contexto = new ContextoOrden(
+          criterio === "ascendente"
+            ? new OrdenCronologicoAscendente()
+            : new FiltrarSolicitudesConCanje()
+        );
+      
+        // Ordenar o filtrar las solicitudes según la estrategia
         return contexto.ordenarSolicitudes(solicitudes);
       }
-    
-    
+      
     
 
 }
