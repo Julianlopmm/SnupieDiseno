@@ -10,7 +10,7 @@ export class CandidatoVisitor implements Visitor {
     async visitSolicitud(solicitud: Solicitud) : Promise<Solicitud> {
         const estado = await this.dataSource.manager.findOne(Estado, {where: {nombre: "Aceptada"}});
         console.log(solicitud)
-        if (solicitud.estadoSolicitud === estado) {
+        if (solicitud.estadoSolicitud.id === estado.id) {
             return solicitud
         }
         return null;
