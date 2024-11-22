@@ -5,23 +5,23 @@ import './DetalleMedicamento.css';
 function DetalleMedicamento() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { medicamento: initialMedicamento } = location.state || {}; // Recibe el medicamento desde la navegación
+  const { medicamento: initialMedicamento, userId } = location.state || {}; // Recibe el medicamento y userId desde la navegación
 
   const [medicamento, setMedicamento] = useState(initialMedicamento || null);
   const [registros, setRegistros] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch para cargar los registros de solicitudes con la estrategia ascendente
-  const fetchSolicitudesAscendente = async (id) => {
+  // Fetch para cargar los registros de solicitudes del medicamento para el usuario seleccionado
+  const fetchSolicitudesUsuario = async (medicamentoId, userId) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        `https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitudesCriterio/${id}?criterio=ascendente`
+        `https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitudesCriterio/${medicamentoId}?criterio=ascendente&userId=${userId}`
       );
       if (!response.ok) {
-        throw new Error('Error al obtener las solicitudes del medicamento');
+        throw new Error('Error al obtener las solicitudes del medicamento para el usuario');
       }
       const data = await response.json();
       setRegistros(data); // Actualiza los registros con los datos obtenidos
@@ -34,10 +34,10 @@ function DetalleMedicamento() {
 
   // Efecto para cargar los registros al montar la pantalla
   useEffect(() => {
-    if (medicamento) {
-      fetchSolicitudesAscendente(medicamento.id);
+    if (medicamento && userId) {
+      fetchSolicitudesUsuario(medicamento.id, userId);
     }
-  }, [medicamento]);
+  }, [medicamento, userId]);
 
   if (loading) {
     return <p>Cargando detalles del medicamento...</p>;
@@ -83,7 +83,7 @@ function DetalleMedicamento() {
           registros.map((registro, index) => (
             <div key={index} className="record-card">
               <p><strong>Fecha Factura:</strong> {registro.fecha || 'N/A'}</p>
-              <p><strong>Número Factura:</strong> {registro.numeroFactura || 'N/A'}</p>
+              <p><strong>Número Factura:</strong> {registro.numSolicitud || 'N/A'}</p>
               <p><strong>Farmacia:</strong> {registro.farmacia?.nombre || 'N/A'}</p>
               <p><strong>Número de Canje:</strong> {registro.canje ? registro.canje.id : 'Disponible'}</p>
             </div>

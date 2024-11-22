@@ -198,11 +198,13 @@ AppDataSource.initialize()
 
     app.get("/solicitudesCriterio/:id", async (req, res) => {
       try {
-        const { id } = req.params;
-        const { criterio } = req.query; 
+        const { id } = req.params; // ID del medicamento
+        const { criterio, userId } = req.query; // ID del usuario y criterio de ordenación
     
-        const solicitudes = await controladorSolicitudes.obtenerSolicitudesPorCriterio(
+        
+        const solicitudes = await controladorSolicitudes.obtenerSolicitudesPorCriterioYUsuario(
           parseInt(id, 10),
+          parseInt(userId as string, 10), 
           criterio as string
         );
     
@@ -211,6 +213,7 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
       }
     });
+    
 
     app.get("/setRoles", async (req, res) => {
       try {

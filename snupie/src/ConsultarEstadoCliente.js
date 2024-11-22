@@ -29,9 +29,11 @@ function ConsultarEstadoCliente() {
   const navigate = useNavigate();
 
 // Función para manejar el clic en "Ver detalle"
-  const handleVerDetalle = (medicamento) => {
-    navigate('/detalle-medicamento', { state: { medicamento } });
-  };
+const handleVerDetalle = (medicamento) => {
+  navigate('/detalle-medicamento', {
+    state: { medicamento, userId: selectedUser }, // Pasamos el userId al navegar
+  });
+};
 
   // Obtener los medicamentos del usuario seleccionado
   const fetchMedicamentosUsuario = async (userId) => {
