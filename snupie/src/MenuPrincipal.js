@@ -52,7 +52,7 @@ function MenuPrincipal() {
         </button>
         <button
           className="menu-button"
-          onClick={() => handleNavigation('/consultaCanjesCliente')}
+          onClick={() => handleNavigation('/consultaCanjesClientes')}
         >
           Consultar Canjes Cliente
         </button>

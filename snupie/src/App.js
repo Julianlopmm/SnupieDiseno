@@ -24,7 +24,7 @@ function App() {
         <Route path="/consultarEstadoCliente" element={<ConsultarEstadoCliente/>} />
         <Route path="/detalle-medicamento" element={<DetalleMedicamento />} />
         <Route path="/canje-medicamento" element={<CanjeMedicamento />} />
-        <Route path="/consulta-canjes-cliente" element={<ConsultaCanjesClientes />} />
+        <Route path="/consultaCanjesClientes" element={<ConsultaCanjesClientes />} />
       </Routes>
     </Router>
   );
