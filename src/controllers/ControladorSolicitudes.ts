@@ -134,8 +134,13 @@ export class ControladorSolicitudes {
             punto.usuario = solicitud.usuario;
             await this.dataSource.manager.save(punto);
         } else {
-            puntosMedicamento.puntosDisponibles += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
-            puntosMedicamento.puntosAcumulados += solicitud.cantidad * solicitud.medicamento.puntosPorCompra;
+            console.log('Cantidad:', solicitud.cantidad);
+            console.log('Medicamento:', solicitud.medicamento);
+            console.log('Puntos por compra:', solicitud.medicamento.puntosPorCompra);
+            console.log('Puntos disponibles:', puntosMedicamento.puntosDisponibles);
+            console.log('Puntos acumulados:', puntosMedicamento.puntosAcumulados);
+            puntosMedicamento.puntosDisponibles += solicitud.cantidad * medicamento.puntosPorCompra;
+            puntosMedicamento.puntosAcumulados += solicitud.cantidad * medicamento.puntosPorCompra;
             await this.dataSource.manager.save(puntosMedicamento);
         }
     

@@ -281,6 +281,15 @@ AppDataSource.initialize()
 
     });
 
+    app.get("/farmaciaUsuarios", async (req, res) => {
+      try {
+        const farmaciaUsuarios = await controladorFarmacias.getFarmaciaUsuarios();
+        res.json(farmaciaUsuarios);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener farmacias", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0

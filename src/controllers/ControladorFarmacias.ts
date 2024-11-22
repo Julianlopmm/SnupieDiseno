@@ -29,9 +29,13 @@ export class ControladorFarmacias {
         const farmacias = await this.dataSource.manager.find(Farmacia);
         const rol = await this.dataSource.manager.findOne(Rol, { where: { nombre: 'Farmacia' } });
         const contrasena = '1234'; // Contraseña predeterminada para todas las farmacias
+
+        const nombresUsuariosExistentes = new Set(
+            (await this.dataSource.manager.find(Usuario)).map(usuario => usuario.nombre)
+        );
+
         for (const farmacia of farmacias) {
-            const usuarioExistente = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
-            if(!usuarioExistente){
+            if (!nombresUsuariosExistentes.has(farmacia.nombre)) {
                 const usuarioNuevo = new Usuario();
                 usuarioNuevo.nombre = farmacia.nombre;
                 usuarioNuevo.email = "example@gmail.com";
@@ -43,10 +47,18 @@ export class ControladorFarmacias {
 
                 this.ListaSingleton.agregarFarmaciaUsuario(farmaciaUsuarioAdapter);
             }
+            else{
+                const user = await this.dataSource.manager.findOne(Usuario, { where: { nombre: farmacia.nombre } });
+                const farmaciaUsuarioAdapter = new FarmaciaUsuarioAdapter(farmacia, rol, contrasena, user.id);
+                this.ListaSingleton.agregarFarmaciaUsuario(farmaciaUsuarioAdapter);
+            }
         }
-
         this.ListaSingleton.setFarmacias(farmacias); // Usa la instancia global
         return farmacias;
+    }
+
+    async getFarmaciaUsuarios(){
+        return this.ListaSingleton.getFarmaciaUsuarios();
     }
 
     // Método para obtener todas las farmacias
