@@ -4,28 +4,34 @@ import './Auth.css';
 
 function Login() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [contrasena, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
+      // Prepara el cuerpo de la solicitud
+      const requestBody = { email, contrasena };
+  
+      // Imprime el cuerpo de la solicitud en la consola
+      console.log('Cuerpo de la solicitud:', JSON.stringify(requestBody));
+  
+      // Realiza la solicitud
       const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(requestBody),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        // Maneja el resultado de la respuesta, por ejemplo, guarda el token o datos del usuario
         console.log('Login exitoso:', data);
         localStorage.setItem('userId', data.id);
         localStorage.setItem('rol', data.rol.id);
         navigate('/menu-principal');
       } else {
-        console.error('Error en el login:', response.statusText);
+        console.error('Error en el login:', response.statusText, response.error);
         alert('Login fallido, revisa tus credenciales.');
       }
     } catch (error) {
@@ -50,7 +56,7 @@ function Login() {
         <input 
           type="password" 
           placeholder="Value"
-          value={password}
+          value={contrasena}
           onChange={(e) => setPassword(e.target.value)}
         />
 
