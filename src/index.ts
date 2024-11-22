@@ -137,7 +137,7 @@ AppDataSource.initialize()
         const solicitud = await controladorSolicitudes.aceptarSolicitud(parseInt(req.params.id));
         res.json(solicitud);
       } catch (error) {
-        res.status(500).json({ message: "Error al aceptar solicitud", error: error.message });
+        res.status(500).json({ message: "Error al aceptar solicitud", error: error.message, stack: error.stack });
       }
     });
 
@@ -146,7 +146,7 @@ AppDataSource.initialize()
         const solicitud = await controladorSolicitudes.rechazarSolicitud(parseInt(req.params.id));
         res.json(solicitud);
       } catch (error) {
-        res.status(500).json({ message: "Error al rechazar solicitud", error: error.message });
+        res.status(500).json({ message: "Error al rechazar solicitud", error: error.message, stack : error.stack });
       }
     });
 
