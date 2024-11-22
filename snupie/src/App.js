@@ -9,6 +9,7 @@ import ReviewRequest from './ReviewRequests'; // Importa ReviewRequest
 import ConsultarEstadoCliente from './ConsultarEstadoCliente';
 import DetalleMedicamento from './DetalleMedicamento';
 import CanjeMedicamento from './CanjeMedicamento';
+import ConsultaCanjesCliente from './ConsultaCanjesCliente';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/consultarEstadoCliente" element={<ConsultarEstadoCliente/>} />
         <Route path="/detalle-medicamento" element={<DetalleMedicamento />} />
         <Route path="/canje-medicamento" element={<CanjeMedicamento />} />
+        <Route path="/consulta-canjes-cliente" element={<ConsultaCanjesCliente />} />
       </Routes>
     </Router>
   );
