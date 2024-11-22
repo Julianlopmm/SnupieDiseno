@@ -5,6 +5,8 @@ import { Medicamento } from '../entity/Medicamento';
 import { Punto } from '../entity/Punto';
 import { Solicitud } from '../entity/Solicitud';
 import { Usuario } from '../entity/Usuario';
+import { ActualizarVisitor } from '../Visitor/ActualizarVisitor';
+import { CandidatoVisitor } from '../Visitor/CandidatoVisitor';
 
 interface CanjesRequest {
     fecha: Date;
@@ -54,14 +56,35 @@ export class ControladorCanjes {
             const puntosNecesarios = canjeData.cantidad * medicamento.puntosParaCanje
     
             // Filtrar solicitudes no asociadas a un canje
-            const solicitudRepository = this.dataSource.manager.getRepository(Solicitud);
-            const solicitudesSinCanje = await solicitudRepository
-            .createQueryBuilder('solicitud')
-            .leftJoinAndSelect('solicitud.canje', 'canje')
-            .where('solicitud.canjeId IS NULL') // Asegúrate de que canjeId es el campo de la base de datos
-            .andWhere('solicitud.usuarioId = :usuarioId', { usuarioId: canjeData.usuario.id })
-            .andWhere('solicitud.medicamentoId = :medicamentoId', { medicamentoId: canjeData.medicamento.id })
-            .getMany();
+            // const solicitudRepository = this.dataSource.manager.getRepository(Solicitud);
+            // const solicitudesSinCanje = await solicitudRepository
+            // .createQueryBuilder('solicitud')
+            // .leftJoinAndSelect('solicitud.canje', 'canje')
+            // .where('solicitud.canjeId IS NULL') // Asegúrate de que canjeId es el campo de la base de datos
+            // .andWhere('solicitud.usuarioId = :usuarioId', { usuarioId: canjeData.usuario.id })
+            // .andWhere('solicitud.medicamentoId = :medicamentoId', { medicamentoId: canjeData.medicamento.id })
+            // .getMany();
+
+
+            // Aplicar visitor para cargar solicitudes sin canje del usuario
+
+            const solicitudes = await this.dataSource.manager.find(Solicitud, {
+                relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario'],
+            });
+        
+            // Crear una instancia del CandidatoVisitor
+            const candidatoVisitor = new CandidatoVisitor();
+        
+            const solicitudesSinCanje: Solicitud[] = [];
+        
+            for (const solicitud of solicitudes) {
+                // Usar el visitante para determinar si la solicitud es aceptada
+                const solicitudAceptada = await candidatoVisitor.visitSolicitud(solicitud);
+                // Si es aceptada y pertenece al usuario dado, la agregamos al resultado
+                if (solicitudAceptada && solicitudAceptada.usuario.id === usuario.id) {
+                    solicitudesSinCanje.push(solicitudAceptada);
+                }
+            }
 
 
             const puntoRepository = this.dataSource.manager.getRepository(Punto);
@@ -94,12 +117,16 @@ export class ControladorCanjes {
             canje.cantidad = canjeData.cantidad;
     
             const savedCanje = await this.dataSource.manager.save(canje);
+
+            const actualizarVisitor = new ActualizarVisitor(savedCanje);
     
             // Asociar las solicitudes seleccionadas al canje
             for (const solicitud of solicitudesSeleccionadas) {
-                solicitud.canje = savedCanje;
+                // solicitud.canje = savedCanje;
+                actualizarVisitor.visitSolicitud(solicitud);
             }
-            await solicitudRepository.save(solicitudesSeleccionadas);
+
+            // await solicitudRepository.save(solicitudesSeleccionadas);
 
             // Actualizar puntos en la base
             puntos.puntosDisponibles -= puntosNecesarios;

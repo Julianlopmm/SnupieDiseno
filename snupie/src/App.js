@@ -8,6 +8,7 @@ import AsignarMedicamentos from './AsignarMedicamentos';
 import ReviewRequest from './ReviewRequests'; // Importa ReviewRequest
 import ConsultarEstadoCliente from './ConsultarEstadoCliente';
 import DetalleMedicamento from './DetalleMedicamento';
+import CanjeMedicamento from './CanjeMedicamento';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/revisarSolicitudes" element={<ReviewRequest />} />
         <Route path="/consultarEstadoCliente" element={<ConsultarEstadoCliente/>} />
         <Route path="/detalle-medicamento" element={<DetalleMedicamento />} />
+        <Route path="/canje-medicamento" element={<CanjeMedicamento />} />
       </Routes>
     </Router>
   );

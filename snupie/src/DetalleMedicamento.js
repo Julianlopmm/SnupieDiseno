@@ -51,6 +51,15 @@ function DetalleMedicamento() {
     return <p>No hay datos disponibles para este medicamento.</p>;
   }
 
+  const handleCanje = () => {
+    // Aquí puedes manejar la acción de canje del medicamento
+    console.log('Canje realizado');
+    navigate( '/canje-medicamento', {
+      state: { medicamento, userId }, // Pasamos el medicamento y userId al navegar
+    })
+
+  };
+
   return (
     <div className="detalle-container">
       <h1 className="title">Detalle del Medicamento</h1>
@@ -69,7 +78,8 @@ function DetalleMedicamento() {
 
         <button
           className="redeem-button"
-          disabled={medicamento.puntosDisponibles < medicamento.puntosParaCanje}
+          // disabled={medicamento.puntosDisponibles < medicamento.puntosParaCanje}
+          onClick={handleCanje}
         >
           {medicamento.puntosDisponibles >= medicamento.puntosParaCanje
             ? 'Aplicar Canje'

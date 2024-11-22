@@ -68,7 +68,15 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al crear usuario", error: error.message });
       }
     });
-    
+
+    app.get('/usuarios/:id', async (req, res) => {
+      try {
+        const usuario = await controladorUsuario.obtenerUsuarioPorId(parseInt(req.params.id));
+        res.json(usuario);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener usuario", error: error.message });
+      }
+    })
 
 
     // MEDICAMENTOS
