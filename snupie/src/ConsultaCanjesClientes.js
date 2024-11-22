@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import './ConsultaCanjesClientes.css';
 
 function ConsultaCanjesCliente() {
   const [selectedUser, setSelectedUser] = useState('');
+  const [usuarios, setUsuarios] = useState([]);
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [medicamentos, setMedicamentos] = useState([]);
 
-  // Ejemplos de usuarios y canjes
-  const usuarios = [
-    { id: 1, nombre: 'Juan Pérez' },
-    { id: 2, nombre: 'María López' },
-    { id: 3, nombre: 'Carlos Rodríguez' },
-  ];
+  // Hook para obtener los usuarios al cargar el componente
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de usuarios');
+        }
+        const data = await response.json();
+        setUsuarios(data);
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    };
+
+    fetchUsuarios();
+  }, []);
+
 
   const canjes = [
     {
