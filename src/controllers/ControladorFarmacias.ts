@@ -66,6 +66,14 @@ export class ControladorFarmacias {
         return this.ListaSingleton.getFarmacias(); // Usa la instancia global
     }
 
+    async getFarmaciaId(id: number){
+        let farmacia = this.ListaSingleton.getFarmacias().find(farmacia => farmacia.id === id);
+        if (!farmacia) {
+            farmacia = await this.dataSource.manager.findOne(Farmacia, { where: { id } });
+        }
+        return farmacia;
+    }
+
     // Método para imprimir todas las farmacias
     imprimirFarmacias() {
         const farmacias = this.ListaSingleton.getFarmacias(); // Usa la instancia global

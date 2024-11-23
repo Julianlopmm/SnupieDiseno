@@ -54,22 +54,11 @@ export class ControladorCanjes {
             if (!farmacia) throw new Error('Farmacia no encontrada');
 
             const puntosNecesarios = canjeData.cantidad * medicamento.puntosParaCanje
-    
-            // Filtrar solicitudes no asociadas a un canje
-            // const solicitudRepository = this.dataSource.manager.getRepository(Solicitud);
-            // const solicitudesSinCanje = await solicitudRepository
-            // .createQueryBuilder('solicitud')
-            // .leftJoinAndSelect('solicitud.canje', 'canje')
-            // .where('solicitud.canjeId IS NULL') // Asegúrate de que canjeId es el campo de la base de datos
-            // .andWhere('solicitud.usuarioId = :usuarioId', { usuarioId: canjeData.usuario.id })
-            // .andWhere('solicitud.medicamentoId = :medicamentoId', { medicamentoId: canjeData.medicamento.id })
-            // .getMany();
-
 
             // Aplicar visitor para cargar solicitudes sin canje del usuario
 
             const solicitudes = await this.dataSource.manager.find(Solicitud, {
-                relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario'],
+                relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario', 'canje'],
             });
         
             // Crear una instancia del CandidatoVisitor
@@ -80,12 +69,12 @@ export class ControladorCanjes {
             for (const solicitud of solicitudes) {
                 // Usar el visitante para determinar si la solicitud es aceptada
                 const solicitudAceptada = await candidatoVisitor.visitSolicitud(solicitud);
+
                 // Si es aceptada y pertenece al usuario dado, la agregamos al resultado
-                if (solicitudAceptada && solicitudAceptada.usuario.id === usuario.id) {
+                if (solicitudAceptada && solicitudAceptada.usuario.id == canjeData.usuario.id && solicitudAceptada.medicamento.id == canjeData.medicamento.id && solicitudAceptada.canje == null) {
                     solicitudesSinCanje.push(solicitudAceptada);
                 }
             }
-
 
             const puntoRepository = this.dataSource.manager.getRepository(Punto);
             const puntos = await puntoRepository.createQueryBuilder('punto')

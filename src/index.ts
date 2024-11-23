@@ -176,6 +176,15 @@ AppDataSource.initialize()
         res.status(500).json({ message: "Error al obtener farmacias", error: error.message });
       }
     });
+
+    app.get('/farmacias/:id', async (req, res) => {
+      try {
+        const farmacia = await controladorFarmacias.getFarmaciaId(parseInt(req.params.id));
+        res.json(farmacia);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener farmacia", error: error.message });
+      }
+    });
     
     app.post('/farmacias', async (req, res) => {
       try {

@@ -78,7 +78,7 @@ function DetalleMedicamento() {
 
         <button
           className="redeem-button"
-          // disabled={medicamento.puntosDisponibles < medicamento.puntosParaCanje}
+          disabled={medicamento.puntosDisponibles < medicamento.puntosParaCanje}
           onClick={handleCanje}
         >
           {medicamento.puntosDisponibles >= medicamento.puntosParaCanje

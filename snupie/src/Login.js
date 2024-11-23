@@ -29,6 +29,10 @@ function Login() {
         console.log('Login exitoso:', data);
         localStorage.setItem('userId', data.id);
         localStorage.setItem('rol', data.rol.id);
+        if (data.rol.id === 4) {
+          localStorage.setItem('farmaciaId', data.farmacia.id);
+          
+        }
         navigate('/menu-principal');
       } else {
         console.error('Error en el login:', response.statusText, response.error);
