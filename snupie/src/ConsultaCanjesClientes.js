@@ -6,6 +6,8 @@ function ConsultaCanjesCliente() {
   const [usuarios, setUsuarios] = useState([]);
   const [canjes, setCanjes] = useState([]);
   const [stats, setStats] = useState(null);
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [selectedCanje, setSelectedCanje] = useState(null);
 
   // Hook para obtener los usuarios al cargar el componente
   useEffect(() => {
@@ -76,8 +78,32 @@ function ConsultaCanjesCliente() {
     fetchStats();
   }, [selectedUser]);
 
+  // Función para obtener solicitudes por canje
+  const toggleSolicitudes = async (canjeId) => {
+    if (selectedCanje === canjeId) {
+      // Si el canje ya está seleccionado, contraerlo
+      setSelectedCanje(null);
+      setSolicitudes([]);
+    } else {
+      // Obtener las solicitudes para el canje seleccionado
+      try {
+        const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/SolicitudesCanje/${canjeId}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener las solicitudes de canje');
+        }
+        const data = await response.json();
+        setSolicitudes(data);
+        setSelectedCanje(canjeId);
+      } catch (error) {
+        console.error('Error al obtener las solicitudes de canje:', error);
+      }
+    }
+  };
+
   const handleUserChange = (event) => {
     setSelectedUser(event.target.value);
+    setSolicitudes([]); // Limpiar solicitudes al cambiar de usuario
+    setSelectedCanje(null);
   };
 
   return (
@@ -124,12 +150,23 @@ function ConsultaCanjesCliente() {
                   <p>
                     <strong>Producto:</strong> {canje.medicamento.nombre} ({canje.medicamento.puntosParaCanje} puntos)
                   </p>
-                  <p>
-                    <strong>Cantidad:</strong> {canje.cantidad}
-                  </p>
-                  <p>
-                    <strong>Farmacia:</strong> {canje.farmacia.nombre}
-                  </p>
+                  <button onClick={() => toggleSolicitudes(canje.id)}>
+                    {selectedCanje === canje.id ? 'Ocultar Solicitudes' : 'Ver Solicitudes'}
+                  </button>
+                  {selectedCanje === canje.id && solicitudes.length > 0 && (
+                    <div className="solicitudes-list">
+                      <h4>Solicitudes asociadas</h4>
+                      {solicitudes.map((solicitud) => (
+                        <div key={solicitud.id} className="solicitud-card">
+                          <p><strong>Número de solicitud:</strong> {solicitud.id}</p>
+                          <p><strong>Número de factura:</strong> {solicitud.numSolicitud}</p>
+                          <p><strong>Farmacia:</strong> {solicitud.farmacia.nombre}</p>
+                          <p><strong>Fecha:</strong> {new Date(solicitud.fecha).toLocaleDateString()}</p>
+                          
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
