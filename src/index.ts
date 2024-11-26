@@ -299,6 +299,24 @@ AppDataSource.initialize()
       }
     });
 
+    app.get("/canjesUsuario/:id", async (req, res) => {
+      try {
+        const canjes = await controladorCanjes.obtenerCanjesPorUsuario(parseInt(req.params.id));
+        res.json(canjes);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener canjes", error: error.message });
+      }
+    });
+
+    app.get("/solicitudesCanje/:id", async (req, res) => {
+      try {
+        const canje = await controladorCanjes.obtenerSolicitudesPorCanje(parseInt(req.params.id));
+        res.json(canje);
+      } catch (error) {
+        res.status(500).json({ message: "Error al obtener solicitudes", error: error.message });
+      }
+    });
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {0

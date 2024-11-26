@@ -1,4 +1,4 @@
 export interface IEstrategiaOrden {
-  ordenar(solicitudes: any[]): any[];
+  ordenar(solicitudes: any): any;
   }
   

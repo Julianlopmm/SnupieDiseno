@@ -12,7 +12,7 @@ export class ContextoOrden {
     this.estrategia = estrategia;
   }
 
-  ordenarSolicitudes(solicitudes: any[]): any[] {
+  ordenarSolicitudes(solicitudes: any): any {
     return this.estrategia.ordenar(solicitudes);
 }
 }

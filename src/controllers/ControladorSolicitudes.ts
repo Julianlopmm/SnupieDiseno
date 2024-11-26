@@ -7,7 +7,7 @@ import { Usuario } from "../entity/Usuario";
 import { Punto } from "../entity/Punto";
 import { ContextoOrden } from "../Strategy/ContextoOrden";
 import { OrdenCronologicoAscendente } from "../Strategy/OrdenCronologicoAscendente";
-import { FiltrarSolicitudesConCanje } from "../Strategy/FiltrarSolicitudesConCanje";
+import { FiltrarSolicitudesPorCanje } from "../Strategy/FiltrarSolicitudesPorCanje";
 import { CandidatoVisitor } from "../Visitor/CandidatoVisitor";
 
 interface SolicitudRequest{
@@ -223,7 +223,7 @@ export class ControladorSolicitudes {
         });
       
         const contexto = new ContextoOrden(
-          criterio === "ascendente" ? new OrdenCronologicoAscendente() : new FiltrarSolicitudesConCanje()
+          criterio === "ascendente" ? new OrdenCronologicoAscendente() : new FiltrarSolicitudesPorCanje()
         );
       
         return contexto.ordenarSolicitudes(solicitudes);

@@ -7,7 +7,8 @@ import { Solicitud } from '../entity/Solicitud';
 import { Usuario } from '../entity/Usuario';
 import { ActualizarVisitor } from '../Visitor/ActualizarVisitor';
 import { CandidatoVisitor } from '../Visitor/CandidatoVisitor';
-
+import { ContextoOrden } from '../Strategy/ContextoOrden';
+import { FiltrarSolicitudesPorCanje } from '../Strategy/FiltrarSolicitudesPorCanje';
 interface CanjesRequest {
     fecha: Date;
     medicamento: Medicamento;
@@ -137,4 +138,13 @@ export class ControladorCanjes {
     async obtenerCanjesPorUsuario(idUsuario: number) {
         return await this.dataSource.manager.find(Canjes, { where: { usuario: { id: idUsuario } }, relations: ['medicamento', 'usuario', 'farmacia'] });
     }
+
+    async obtenerSolicitudesPorCanje(idCanje: number) {
+        const contexto = new ContextoOrden(
+            new FiltrarSolicitudesPorCanje()
+          );
+        const canje = await this.dataSource.manager.findOne(Canjes, { where: { id: idCanje }, relations: ['solicitudes'] });
+        return contexto.ordenarSolicitudes(canje);
+    }
+
 }
