@@ -15,7 +15,7 @@ function MenuPrincipal() {
   const isSolicitudDisabled = role !== 1 && role !== 3;
   const isMedicamentoDisabled = role !== 1;
   const isRevisarDisabled = role !== 1 && role !== 2;
-  const isConsultarEstadoDisabled = role !== 1 && role !== 3;
+  const isConsultarEstadoDisabled = role !== 1 && role !== 4; 
   const isConsultarCanjesDisabled = role !== 1 && role !== 4;
 
   return (
