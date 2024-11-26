@@ -143,8 +143,15 @@ export class ControladorCanjes {
         const contexto = new ContextoOrden(
             new FiltrarSolicitudesPorCanje()
           );
-        const canje = await this.dataSource.manager.findOne(Canjes, { where: { id: idCanje }, relations: ['solicitudes'] });
-        return contexto.ordenarSolicitudes(canje);
+        const solicitudes = await this.dataSource.manager.find(Solicitud, {relations: ['medicamento', 'medicamento.presentacion', 'farmacia', 'estadoSolicitud', 'usuario', 'canje'] });
+        console.log("solicitudes",solicitudes);
+        const solicitudesConCanje = contexto.ordenarSolicitudes(solicitudes);
+        console.log("solicitudesConCanje",solicitudesConCanje);
+        const solicitudesCanjeID = solicitudesConCanje.filter(solicitud => solicitud.canje.id == idCanje);
+
+        return solicitudesCanjeID;
+
+        
     }
 
 }
