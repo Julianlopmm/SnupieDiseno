@@ -13,7 +13,7 @@ function ConsultaCanjesCliente() {
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
+        const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/usuarios');
         if (!response.ok) {
           throw new Error('Error al obtener la lista de usuarios');
         }
@@ -33,7 +33,7 @@ function ConsultaCanjesCliente() {
       if (!selectedUser) return;
 
       try {
-        const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/canjesUsuario/${selectedUser}`);
+        const response = await fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/canjesUsuario/${selectedUser}`);
         if (!response.ok) {
           throw new Error('Error al obtener los canjes');
         }
@@ -53,7 +53,7 @@ function ConsultaCanjesCliente() {
       if (!selectedUser) return;
 
       try {
-        const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/puntos/${selectedUser}`);
+        const response = await fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/puntos/${selectedUser}`);
         if (!response.ok) {
           throw new Error('Error al obtener los puntos del usuario');
         }
@@ -87,7 +87,7 @@ function ConsultaCanjesCliente() {
     } else {
       // Obtener las solicitudes para el canje seleccionado
       try {
-        const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/SolicitudesCanje/${canjeId}`);
+        const response = await fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/SolicitudesCanje/${canjeId}`);
         if (!response.ok) {
           throw new Error('Error al obtener las solicitudes de canje');
         }

@@ -18,7 +18,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchFarmacias = async () => {
             try {
-                const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/farmacias');
+                const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/farmacias');
                 if (response.ok) {
                     const data = await response.json();
                     setFarmacias(data);
@@ -37,7 +37,7 @@ const RegistrarSolicitud = () => {
     useEffect(() => {
         const fetchMedicamentos = async () => {
             try {
-                const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/activos');
+                const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/activos');
                 if (response.ok) {
                     const data = await response.json();
                     setProductos(data);
@@ -75,7 +75,7 @@ const RegistrarSolicitud = () => {
             };
             
 
-            const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitud', {
+            const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/solicitud', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

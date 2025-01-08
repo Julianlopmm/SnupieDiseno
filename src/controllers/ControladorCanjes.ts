@@ -148,8 +148,6 @@ export class ControladorCanjes {
         const solicitudesCanjeID = solicitudesConCanje.filter(solicitud => solicitud.canje.id == idCanje);
 
         return solicitudesCanjeID;
-
-        
     }
 
 }

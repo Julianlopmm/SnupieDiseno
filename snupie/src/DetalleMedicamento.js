@@ -18,7 +18,7 @@ function DetalleMedicamento() {
     setError(null);
     try {
       const response = await fetch(
-        `https://api-snupie-diseno-1017614000153.us-central1.run.app/solicitudesCriterio/${medicamentoId}?criterio=ascendente&userId=${userId}`
+        `https://api-snupie-acs-287732579337.us-central1.run.app/solicitudesCriterio/${medicamentoId}?criterio=ascendente&userId=${userId}`
       );
       if (!response.ok) {
         throw new Error('Error al obtener las solicitudes del medicamento para el usuario');

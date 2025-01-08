@@ -11,7 +11,7 @@ function ConsultarEstadoCliente() {
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios');
+        const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/usuarios');
         if (!response.ok) {
           throw new Error('Error al obtener la lista de usuarios');
         }
@@ -38,7 +38,7 @@ const handleVerDetalle = (medicamento) => {
   // Obtener los medicamentos del usuario seleccionado
   const fetchMedicamentosUsuario = async (userId) => {
     try {
-      const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/medicamentosUsuario/${userId}`);
+      const response = await fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/medicamentosUsuario/${userId}`);
       if (!response.ok) {
         throw new Error('Error al obtener los medicamentos del usuario');
       }

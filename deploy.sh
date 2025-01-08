@@ -1,9 +1,9 @@
-GOOGLE_PROJECT_ID=fiery-rarity-435201-h6
-CLOUD_RUN_SERVICE=api-snupie-diseno
-INSTANCE_CONNECTION_NAME=fiery-rarity-435201-h6:us-central1:snupie
+GOOGLE_PROJECT_ID=arboreal-totem-447220-c6
+CLOUD_RUN_SERVICE=api-snupie-acs
+INSTANCE_CONNECTION_NAME=arboreal-totem-447220-c6:us-central1:prueba
 DB_USER=root
 DB_PASSWORD=4321
-DB_NAME=snupie_diseno
+DB_NAME=snupie_acs
 
 gcloud builds submit --tag gcr.io/$GOOGLE_PROJECT_ID/$CLOUD_RUN_SERVICE \
   --project $GOOGLE_PROJECT_ID

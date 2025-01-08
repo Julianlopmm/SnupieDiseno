@@ -33,7 +33,7 @@ function CanjeMedicamento() {
   // Efecto para cargar el usuario
   useEffect(() => {
     if (userId) {
-      fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/usuarios/${userId}`)
+      fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/usuarios/${userId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Error al cargar los datos del usuario');
@@ -50,7 +50,7 @@ function CanjeMedicamento() {
   // Efecto para cargar la farmacia
   useEffect(() => {
     if (farmaciaId) {
-      fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/farmacias/${farmaciaId}`)
+      fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/farmacias/${farmaciaId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Error al cargar los datos de la farmacia');
@@ -79,7 +79,7 @@ function CanjeMedicamento() {
     };
   
     try {
-      const response = await fetch('https://api-snupie-diseno-1017614000153.us-central1.run.app/crearCanje', {
+      const response = await fetch('https://api-snupie-acs-287732579337.us-central1.run.app/crearCanje', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

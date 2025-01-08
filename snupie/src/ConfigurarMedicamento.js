@@ -8,7 +8,7 @@ function ConfigurarMedicamento({ medicamento }) {
   
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`https://api-snupie-diseno-1017614000153.us-central1.run.app/medicamentos/${medicamento.id}`, {
+      const response = await fetch(`https://api-snupie-acs-287732579337.us-central1.run.app/medicamentos/${medicamento.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
