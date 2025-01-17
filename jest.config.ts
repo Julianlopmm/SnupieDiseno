@@ -9,7 +9,13 @@ const config: Config = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   modulePaths: ["<rootDir>/src"],
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
-  transformIgnorePatterns: ["<rootDir>/node_modules/"]
+  transformIgnorePatterns: ["<rootDir>/node_modules/"],
+  globals: {
+    "ts-jest": {
+      tsconfig: "tsconfig.json",
+      isolatedModules: false
+    }
+  }
 };
 
 export default config;

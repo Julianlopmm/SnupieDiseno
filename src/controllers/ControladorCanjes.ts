@@ -21,6 +21,7 @@ interface CanjesRequest {
 export class ControladorCanjes {
 
     private canjes: Canjes[] = [];
+    
 
     constructor(private dataSource = AppDataSource) {
         this.init();
