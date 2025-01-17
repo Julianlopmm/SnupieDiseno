@@ -125,7 +125,55 @@ describe('Pruebas de integración de crearCanje (sin acceso a BD)', () => {
 
     
   });
-  // ✅ Caso 2: No hay suficientes puntos para el canje
+  
+
+  it('Debe manejar correctamente un error en la base de datos', async () => {
+    jest.spyOn(mockDataSource.manager, 'save').mockRejectedValue(new Error("Error en la base de datos"));
+
+    const canjeData = {
+        fecha: new Date(),
+        usuario: { id: 1, nombre: "Juan Pérez", email: "juan@example.com", contrasena: "1234", rol: { id: 2, nombre : "Operativo" }, solicitudes: [] },
+        medicamento: { id: 101, nombre: "Paracetamol", puntosParaCanje: 50, puntosPorCompra: 10, descripcion: "Medicamento para el dolor"
+          , presentacion: { id: 1, nombre: "Tabletas" }, precio: 100, urlImagen: "https://www.example.com/paracetamol.jpg", estadoPromocion: true,
+          solicitudes: []
+         },
+        farmacia: { id: 10, nombre: "Farmacia Central", direccion: "Av. Principal 123", telefono: "123456789", solicitudes: [], email: "central@gmail.com" },
+        cantidad: 2
+      };
+
+    await expect(controladorCanjes.crearCanje(canjeData)).rejects.toThrow("Error en la base de datos");
+  });
+
+  it('Debe crear un canje correctamente cuando hay suficientes puntos y solicitudes válidas', async () => {
+    jest.spyOn(mockDataSource.manager, 'save').mockResolvedValue(Object.assign(new Canjes(), {
+      id: 999,
+      fecha: new Date(),
+      usuario: Object.assign(new Usuario(), { id: 1 }),
+      medicamento: Object.assign(new Medicamento(), { id: 101 }),
+      farmacia: Object.assign(new Farmacia(), { id: 10 }),
+      cantidad: 2
+    }));
+
+    const canjeData = {
+        fecha: new Date(),
+        usuario: { id: 1, nombre: "Juan Pérez", email: "juan@example.com", contrasena: "1234", rol: { id: 2, nombre : "Operativo" }, solicitudes: [] },
+        medicamento: { id: 101, nombre: "Paracetamol", puntosParaCanje: 50, puntosPorCompra: 10, descripcion: "Medicamento para el dolor"
+          , presentacion: { id: 1, nombre: "Tabletas" }, precio: 100, urlImagen: "https://www.example.com/paracetamol.jpg", estadoPromocion: true,
+          solicitudes: []
+         },
+        farmacia: { id: 10, nombre: "Farmacia Central", direccion: "Av. Principal 123", telefono: "123456789", solicitudes: [], email: "central@gmail.com" },
+        cantidad: 2
+      };
+
+    const result = await controladorCanjes.crearCanje(canjeData);
+
+    expect(CandidatoVisitor.prototype.visitSolicitud).toHaveBeenCalled();
+    expect(ActualizarVisitor.prototype.visitSolicitud).toHaveBeenCalled();
+    expect(result).toHaveProperty('canje');
+    expect(result.canje.id).toBe(999);
+    expect(mockDataSource.manager.save).toHaveBeenCalled();
+  });
+
   it('Debe lanzar error si el usuario no tiene suficientes puntos', async () => {
     // 🔹 Modificamos el mock de puntos para simular un usuario con solo 10 puntos
     jest.spyOn(mockDataSource.manager.getRepository(Punto).createQueryBuilder(), 'getOne').mockResolvedValue({
@@ -146,7 +194,7 @@ describe('Pruebas de integración de crearCanje (sin acceso a BD)', () => {
 
     await expect(controladorCanjes.crearCanje(canjeData)).rejects.toThrow("Puntos insuficientes para realizar el canje.");
   });
-  // ✅ Caso 3: Datos obligatorios faltantes
+
   it('Debe lanzar error si faltan datos obligatorios', async () => {
     const canjeData = {
       fecha: new Date(), // 🔹 Falta `usuario`, `medicamento` y `farmacia`
