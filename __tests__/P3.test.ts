@@ -202,7 +202,7 @@ describe('Pruebas de integración de crearCanje (sin acceso a BD)', () => {
     };
 
     await expect(controladorCanjes.crearCanje(canjeData as any)).rejects.toThrow(
-      "Datos inválidos: fecha, idUsuario, idMedicamento, y idFarmacia son obligatorios."
+      "Datos inválidos: fecha, idUsuario, idMedicamento, y idFarmacia son obligatorios"
     );
   });
 });
