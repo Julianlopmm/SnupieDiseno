@@ -15,7 +15,10 @@ const config: Config = {
       tsconfig: "tsconfig.json",
       isolatedModules: false
     }
-  }
+  },
+  testPathIgnorePatterns: [
+    '<rootDir>/snupie/src/__tests__' // 🔹 Ignorar pruebas dentro de /snupie
+  ],
 };
 
 export default config;
